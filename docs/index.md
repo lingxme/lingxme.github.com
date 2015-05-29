@@ -84,6 +84,7 @@
 <SCRIPT type="text/javascript" >
  $(document).ready(function(){ $('#tree').ztree_toc({
  is_auto_number:true, 
+is_highlight_selected_line:false,
 documment_selector:'.markdown-body', 
 ztreeStyle: { width:'260px', overflow: 'auto', position: 'fixed', 'z-index': 2147483647, border: '0px none', left: '0px', top: '0px' } 
 }); });
