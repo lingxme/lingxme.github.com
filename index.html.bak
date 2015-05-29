@@ -31,9 +31,9 @@
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>LINGX开发平台介绍</h3>
 
 <p>
-LINGX(<a href="docs/index.html">技术文档</a>)是开源的、在线研发、基于配置、模型驱动的开发平台；<br/>基于J2EE架构开发平台，不是一般的MVC框架、非代码生成器；
+LINGX是开源的、在线研发、基于配置、模型驱动的开发平台；<br/>基于J2EE架构开发平台，不是一般的MVC框架、非代码生成器；
 <br/>集开发、运行、管理、监控于一身WEB项目，可运行于tomcat、jetty等WEB容器中；<br/>主要开发语言为java、javascript、sql
-</p>
+(<a href="doc/index.html">技术文档</a>)</p>
 
 <pre><code>
 WEB在线开发配置工具
