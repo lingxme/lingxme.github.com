@@ -31,11 +31,13 @@
 <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>LINGX开发平台介绍</h3>
 
 <p>
-LINGX是开源的、在线研发、基于配置、模型驱动的开发平台；<br/>基于J2EE架构开发平台，不是一般的MVC框架、非代码生成器；
-<br/>集开发、运行、管理、监控于一身WEB项目，可运行于tomcat、jetty等WEB容器中；<br/>主要开发语言为java、javascript、sql
-(<a href="doc/index.html">技术文档</a>)</p>
+LINGX(<a href="docs/index.html">技术文档</a>)是基于J2EE架构开发平台，不是MVC框架、非代码生成器；
+<br/>中；<br/>主要开发语言为java、javascript、sql
+</p>
 
 <pre><code>
+开源的、在线研发、基于配置、模型驱动的开发平台
+集开发、运行、管理、监控于一身WEB项目，可运行于tomcat、jetty等WEB容器
 WEB在线开发配置工具
 业务逻辑执行引擎
 树形、列表、对象、级联展示模版
@@ -72,14 +74,17 @@ Log4j 2.0  日志工具<br>
 <p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
 
 <h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>关于作者</h3>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<p>作者是一名普通程序员，工作7年，技术宅；在业余时间做了些技术尝试与研究。希望对大伙有帮助
+
+</p>
 
 <h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>联系方式</h3>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="https://help.github.com/pages">https://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>lingx.me@qq.com </p>
+<p>http://blog.lingx.me</p>
       </section>
     </div>
 
