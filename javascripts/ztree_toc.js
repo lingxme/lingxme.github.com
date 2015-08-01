@@ -275,6 +275,7 @@ function factor(opts ,count,current) {
 		is_highlight_selected_line: true,
 		step: 100,
 		ztreeStyle: {
+			height:"100px",
 			width:'260px',
 			overflow: 'auto',
 			position: 'fixed',
@@ -324,3 +325,6 @@ function factor(opts ,count,current) {
 	};
 
 })(jQuery);
+$(function(){
+$("#tree").height($(window).height()-10);
+});
