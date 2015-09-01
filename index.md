@@ -265,5 +265,7 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 is_highlight_selected_line:false,
 documment_selector:'.markdown-body', 
 ztreeStyle: { width:'260px', overflow: 'auto', position: 'fixed', 'z-index': 2147483647, border: '0px none', left: '0px', top: '0px' } 
-}); });
+});
+$("title").text("LINGX模型驱动开发平台-抛开编码细节、专注业务逻辑");
+ });
 </SCRIPT> 
