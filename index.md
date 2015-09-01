@@ -254,10 +254,10 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 # 在线更新
 
  </article>
-<script type="text/javascript" src="../javascripts/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="../javascripts/jquery.ztree.core-3.5.min.js"></script>
-<script type="text/javascript" src="../javascripts/ztree_toc.js"></script>
-<link rel="stylesheet" href="../stylesheets/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="javascripts/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="javascripts/jquery.ztree.core-3.5.min.js"></script>
+<script type="text/javascript" src="javascripts/ztree_toc.js"></script>
+<link rel="stylesheet" href="stylesheets/zTreeStyle/zTreeStyle.css" type="text/css">
 
 <SCRIPT type="text/javascript" >
  $(document).ready(function(){ $('#tree').ztree_toc({

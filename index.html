@@ -518,13 +518,13 @@ img {
 <h3>菜单授权</h3>
 <h3>功能授权</h3>
 <h1>开发环境</h1>
+<h2>本地开发-Eclipse</h2>
+<h3>创建Web项目</h3>
+<h3>下载并导入相关jar</h3>
+<h3>安装数据库</h3>
+<h3>配置数据库</h3>
 <h2>在线开发-WEB</h2>
 <h3>创建对象</h3>
-<h2>本地开发-Eclipse</h2>
-<h3>下载GIT源码</h3>
-<h3>maven环境配置</h3>
-<h3>安装数据库</h3>
-<h3>数据库</h3>
 <h1>插件管理</h1>
 <h2>插件安装</h2>
 <h2>插件配置</h2>
@@ -533,33 +533,11 @@ img {
 <h3>AOP切面编程</h3>
 <h3>工作调度@Scheduled</h3>
 <h1>在线更新</h1>
-<pre><code>public Map&lt;String, Object&gt; execute(Map&lt;String, Object&gt; param,String appkey) throws Exception {
-    Map&lt;String,Object&gt; ret=this.getDefaultResultMap();
-    if(this.checkIsNull(param, &quot;technician_id&quot;,&quot;技师ID&quot;,ret))return ret;
-    //int technician_id=this.getTechnicianId(param.get(&quot;token&quot;).toString());
-    List&lt;Map&lt;String,Object&gt;&gt; list=this.jdbcTemplate.queryForList(&quot;select &quot;+ITechnicianService.TECHNICIAN_PUBLIC_FIELD+&quot; from tim_technician where id=?&quot;,param.get(&quot;technician_id&quot;));
-
-    if(list.size()&gt;0){
-        this.addResult(&quot;datas&quot;, formatTechnician(list.get(0),this.jdbcTemplate), ret);
-    }else{
-        this.addResult(&quot;datas&quot;,new HashMap(), ret);
-    }
-    return ret;
-}
-</code></pre>
-
-<blockquote>
-<p>在劳而无功 城</p>
-</blockquote>
-<h2>测试1</h2>
-<p>有志者事竟成</p>
-<h2>测试2</h2>
-<p>有声有色
- </article>
-<script type="text/javascript" src="../javascripts/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="../javascripts/jquery.ztree.core-3.5.min.js"></script>
-<script type="text/javascript" src="../javascripts/ztree_toc.js"></script>
-<link rel="stylesheet" href="../stylesheets/zTreeStyle/zTreeStyle.css" type="text/css"></p>
+<p></article>
+<script type="text/javascript" src="javascripts/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="javascripts/jquery.ztree.core-3.5.min.js"></script>
+<script type="text/javascript" src="javascripts/ztree_toc.js"></script>
+<link rel="stylesheet" href="stylesheets/zTreeStyle/zTreeStyle.css" type="text/css"></p>
 <SCRIPT type="text/javascript" >
  $(document).ready(function(){ $('#tree').ztree_toc({
  is_auto_number:true, 
