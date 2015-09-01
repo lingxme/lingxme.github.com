@@ -174,12 +174,12 @@ function factor(opts ,count,current) {
 			timeout = setTimeout(function() {
 				var top = $(opts.scroll_selector).scrollTop(),highlighted;
 
-				if(opts.debug) console.log('top='+top);
+				log('top='+top);
 
 				for (var i = 0, c = opts._header_offsets.length; i < c; i++) {
 					// fixed: top+5防止点击ztree的时候，出现向上抖动的情况
 					if (opts._header_offsets[i] >= (top + 5) ) {
-						console.log('opts._header_offsets['+ i +'] = '+opts._header_offsets[i]);
+						//console.log('opts._header_offsets['+ i +'] = '+opts._header_offsets[i]);
 						$('a').removeClass('curSelectedNode');
 
 						// 由于有root节点，所以i应该从1开始
@@ -209,6 +209,7 @@ function factor(opts ,count,current) {
 	function log(str) {
 		return;
 		if($.fn.ztree_toc.defaults.debug == true) {
+			if (console)
 			console.log(str);
 		}
 	}
@@ -305,7 +306,7 @@ function factor(opts ,count,current) {
 					$('a').removeClass('curSelectedNode');
 					if(treeNode.id == 1){
 						// TODO: when click root node
-						console.log('click root table of content');
+						//console.log('click root table of content');
 					}
 					if($.fn.ztree_toc.defaults.is_highlight_selected_line == true) {
 						//$('#' + treeNode.id).css('color' ,'red').fadeOut("slow" ,function() {
@@ -317,7 +318,7 @@ function factor(opts ,count,current) {
 				onRightClick: function(event, treeId, treeNode) {
 					if(treeNode.id == 1){
 						// TODO: when right_click root node:table content
-						console.log('right_click root table of content');
+						//console.log('right_click root table of content');
 					}
 				}
 			}
