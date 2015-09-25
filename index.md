@@ -114,6 +114,7 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 在一个系统中有许多树型结构的数据，LINGX为其定制了树型展示模版，同时对该数据表有一个要求，上级ID的字段名必须为“fid”；
 另外有两个可选字段：1、state节点打开（open）或关闭（close）；2、iconCls节点的图标样式。
 ####fid 与本表的ID类型一至
+根节点的fid必须为0
 ####state 字符串
 ####iconCls 字符串
 
@@ -188,13 +189,83 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 ### 字符串长度不小于{}
 ### 唯一验证
 ### 自定义验证器
+自定义验证器，需要继承于抽象类：com.lingx.support.model.validator.AbstractValidator
+
+IContext 执行上下文，详见API
+
+IPerformer 脚本执行，详见API
+
+	//需要注册到Spring容器中
+	@Component
+	public class NotNullValidator extends AbstractValidator {
+	
+	public NotNullValidator(){
+		this.setType("notnull");//调用键值，不可与其他的键值重复
+		this.setName("不可为空");//显示值
+	}
+	private static final long serialVersionUID = 5104545985585423221L;
+
+	@Override
+	public boolean valid(String code,Object value, String param, //value要验证的值,param要验证的参数名
+			IContext context,IPerformer performer) throws LingxScriptException {
+		
+		return value!=null&&!"".equals(value.toString());
+	}
+	}
+
 ## 解释器
 ### 表达式验证器
 ### 日期解释器1
 将20150716220123转为2015-07-16
 ### 日期解释器2
 将20150716220123转为2015-07-16 22:02:23
+### 时间4
+将1200转为12:00
+
 ### 自定义解释器
+自定义解释器，需要继承于抽象类: com.lingx.support.model.interpreter.AbstractInterpreter 
+
+IContext 执行上下文，详见API
+
+IPerformer 脚本执行，详见API
+
+	//需要注册到Spring容器中
+	@Component
+    public class Time4Interpreter extends AbstractInterpreter{
+
+	public Time4Interpreter(){
+		this.setType("time4");//调用键值，不可与其他的键值重复
+		this.setName("时间4");//显示值
+	}
+	private static final long serialVersionUID = 3727950655388868120L;
+
+	@Override
+	public Object input(Object value, IContext context, IPerformer jsper)
+			throws LingxScriptException {
+		if(value!=null){
+			String temp=value.toString();
+			 temp=temp.replaceAll("[-]|[ ]|[:]", "");
+			return temp;
+		}else{
+			return "";
+		}
+	}
+
+	@Override
+	public Object output(Object value, IContext context, IPerformer jsper)
+			throws LingxScriptException {
+		String temp=null;
+		StringBuilder sb=new StringBuilder();
+		if(value!=null){
+			temp=value.toString();
+			sb.append(temp.substring(0,2)).append(":").append(temp.substring(2));
+		}else{
+			return value;
+		}
+		return sb.toString();
+	}
+	}
+
 ## 执行器
 ###表达式执行器
 ###对象视图展示执行器
@@ -244,6 +315,447 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 ### 配置数据库
 ## 在线开发-WEB
 ### 创建对象
+#API
+##Java/Jsp开发的平台API
+###取出Spring容器
+在Java代码中不需要直接取Spring对象，直接使用@Service注解便可取得相应对象
+
+在Jsp中使用以下方法
+
+	ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+	JdbcTemplate jdbc=applicationContext.getBean("jdbcTemplate",JdbcTemplate.class);
+	
+###综合API ILingxService
+    
+   
+    
+    /** 
+     * @author www.lingx.com
+     * @version 创建时间：2015年4月5日 上午11:30:24 
+     * lingx框架的核心服务类
+     */
+    public interface ILingxService {
+    	/**
+    	 * 获取Spring环境
+    	 * @return
+    	 */
+    	public ApplicationContext getSpringContext();
+    	/**
+    	 * 取得配置信息
+    	 * @param key
+    	 * @return
+    	 */
+    	public String getConfigValue(String key,String defaultValue);
+    	/**
+    	 * 取得配置信息
+    	 * @param key
+    	 * @return
+    	 */
+    	public int getConfigValue(String key,int defaultValue);
+    	/**
+    	 * 从Spring容器中取出对象
+    	 * @param key
+    	 * @return
+    	 */
+    	public Object getBean(String key);
+    	/**
+    	 * 根据ID取出系统插件
+    	 * @param id
+    	 * @return
+    	 */
+    	public IPlugin getPlugin(String id)throws LingxPluginException;
+    	/**
+    	 * 取得插件管理器
+    	 */
+    	public PluginManager getPluginManager();
+    	/**
+    	 * 调用模型中的方法
+    	 * @param entityCode
+    	 * @param methodCode
+    	 * @param params
+    	 * @return
+    	 */
+    	public Object call(String entityCode,String methodCode,Map<String,String> params,IContext context);
+    	/**
+    	 * 判断当前用户是否是超管人员
+    	 * @param request
+    	 * @return
+    	 */
+    	public boolean isSuperman(HttpServletRequest request);
+    	/**
+    	 * 统计外关联数
+    	 * @param entityCode
+    	 * @param id
+    	 * @return
+    	 */
+    	public int countForeignKey(String entityCode, Object id);
+    	/**
+    	 * 生成UUID
+    	 * @return
+    	 */
+    	public String uuid();
+    	/**
+    	 * 获取时间戳:20150616165723
+    	 * @return
+    	 */
+    	public String ts();
+    	/**
+    	 * 获取时间戳:20150616165723
+    	 * @return
+    	 */
+    	public String getTime();
+    	/**
+    	 * 密码加密
+    	 * @param password 密码明文
+    	 * @param userid 账号明文
+    	 * @return
+    	 */
+    	public String passwordEncode(String password, String userid);
+    	}
+
+### IContent 执行上下文
+	
+	/**
+	 * 存在request.attribute的客户端IP
+	 */
+	public static final String CLIENT_IP="ClientIP";
+	/**
+	 * 存在request.attrbute的项目运行根目录
+	 */
+	public static final String LOCAL_PATH="LocalPath";
+	/**
+	 * 获取RQEUEST对象，等同HttpServletRequest
+	 * @return
+	 */
+	public IHttpRequest getRequest();
+	/**
+	 * 获取SESSION对象，等同HttpSession
+	 * @return
+	 */
+	public Map<String,Object> getSession();
+	/**
+	 * 设置当前对象模型
+	 * @param entity
+	 */
+	public void setEntity(IEntity entity);
+	/**
+	 * 设置当前方法模型
+	 * @param method
+	 */
+	public void setMethod(IMethod method);
+	/**
+	 * 取出当前对象模型
+	 * @return
+	 */
+	public IEntity getEntity();
+	/**
+	 * 取出当前方法模型
+	 * @return
+	 */
+	public IMethod getMethod();
+	/**
+	 * 取出当前登录用户
+	 * @return
+	 */
+	public UserBean getUserBean();
+###IPerformer
+	/**
+	 * 执行脚本
+	 * @param script
+	 * @param context
+	 * @return
+	 * @throws LingxScriptException
+	 */
+	public Object script(IScript script,IContext context) throws LingxScriptException;
+
+##执行器中的内置对象API
+	
+###LINGX 核心处理类
+
+	/**
+	 * 获取Spring环境
+	 * @return
+	 */
+	public ApplicationContext getSpringContext();
+	/**
+	 * 取得配置信息
+	 * @param key
+	 * @return
+	 */
+	public String getConfigValue(String key,String defaultValue);
+	/**
+	 * 取得配置信息
+	 * @param key
+	 * @return
+	 */
+	public int getConfigValue(String key,int defaultValue);
+	/**
+	 * 从Spring容器中取出对象
+	 * @param key
+	 * @return
+	 */
+	public Object getBean(String key);
+	/**
+	 * 根据ID取出系统插件
+	 * @param id
+	 * @return
+	 */
+	public IPlugin getPlugin(String id)throws LingxPluginException;
+	/**
+	 * 取得插件管理器
+	 */
+	public PluginManager getPluginManager();
+	/**
+	 * 调用模型中的方法
+	 * @param entityCode
+	 * @param methodCode
+	 * @param params
+	 * @return
+	 */
+	public Object call(String entityCode,String methodCode,Map<String,String> params,IContext context);
+	/**
+	 * 判断当前用户是否是超管人员
+	 * @param request
+	 * @return
+	 */
+	public boolean isSuperman(HttpServletRequest request);
+	/**
+	 * 统计外关联数
+	 * @param entityCode
+	 * @param id
+	 * @return
+	 */
+	public int countForeignKey(String entityCode, Object id);
+	/**
+	 * 生成UUID
+	 * @return
+	 */
+	public String uuid();
+	/**
+	 * 获取时间戳:20150616165723
+	 * @return
+	 */
+	public String ts();
+	/**
+	 * 获取时间戳:20150616165723
+	 * @return
+	 */
+	public String getTime();
+	/**
+	 * 密码加密
+	 * @param password 密码明文
+	 * @param userid 账号明文
+	 * @return
+	 */
+	public String passwordEncode(String password, String userid);
+
+###CUser 当前用户
+当前登陆用户的API
+
+	public String getId();//取ID
+	public String getAccount();//取账号
+	public String getName();//取名字
+	public String getStatus();//取状态
+
+###JDBC 数据库操作
+详见以下链接：
+> http://docs.spring.io/spring/docs/1.1.5/api/org/springframework/jdbc/core/JdbcTemplate.html
+
+###REQUEST 请求对象
+	
+	/**
+	 * 根据参数名获取请求参数值
+	 * @param key
+	 * @return
+	 */
+	String getParameter(String key);
+	/**
+	 * 根据参数名获取请求参数值，如果参数为空时，返回缺省值
+	 * @param key
+	 * @param defaultValue 
+	 * @return
+	 */
+	String getParameter(String key,String defaultValue);
+	/**
+	 * 设置请求周期内属性
+	 * @param key
+	 * @param value
+	 */
+	void setAttribute(String key,Object value);
+	/**
+	 * 获取属性
+	 * @param key
+	 * @return
+	 */
+	Object getAttribute(String key);
+	/**
+	 * 获取请求所有参数值数组
+	 * @param key
+	 * @return
+	 */
+	String[] getParameterValues(String key);
+	/**
+	 * 获取所有属性
+	 * @return
+	 */
+	Map<String,Object> getAttributes();
+	/**
+	 * 获取所有参数
+	 * @return
+	 */
+	Map<String,String[]> getParameters();
+	/**
+	 * 获取所有参数名
+	 * @return
+	 */
+	Set<String> getParameterNames();
+###CONTEXT 执行上下文
+	
+	
+	/**
+	 * 获取RQEUEST对象，等同HttpServletRequest
+	 * @return
+	 */
+	public IHttpRequest getRequest();
+	/**
+	 * 获取SESSION对象，等同HttpSession
+	 * @return
+	 */
+	public Map<String,Object> getSession();
+	/**
+	 * 设置当前对象模型
+	 * @param entity
+	 */
+	public void setEntity(IEntity entity);
+	/**
+	 * 设置当前方法模型
+	 * @param method
+	 */
+	public void setMethod(IMethod method);
+	/**
+	 * 取出当前对象模型
+	 * @return
+	 */
+	public IEntity getEntity();
+	/**
+	 * 取出当前方法模型
+	 * @return
+	 */
+	public IMethod getMethod();
+	/**
+	 * 取出当前登录用户
+	 * @return
+	 */
+	public UserBean getUserBean();
+
+###自定义执行器中的API
+
+	@Configuration
+	public class ApiConfig {
+	@Resource
+	private ILingxService lingxService;
+	
+	@Bean(name="LINGX")//这里的LINGX就是在执行器中的内置对象名
+	public IScriptApi getLingxApi(){
+		IScriptApi lingx=new DefaultScriptApi();
+		lingx.setBean(this.lingxService);
+		return lingx;
+		
+	}
+	
+	}
+
+##前端开发中的JavaScript API
+###页面通用API
+> 必须引入 <%@ include file="/lingx/include/include_JavaScriptAndCss.jsp"%> 
+>
+    /**
+     * 获取页面ID
+     * @returns {___anonymous_pageId}
+     */
+    function getPageID()
+    /**
+     * 得到页面宽度
+     * @returns
+     */
+    function getRootWidth()
+    /**
+     * 得到页面高度
+     * @returns
+     */
+    function getRootHeight()
+    /**
+     * 得到工作区域的宽度
+     */
+    function getCenterWidth()
+    /**
+     * 得到工作区域的高度
+     */
+    function getCenterHeight()
+    /**
+     * 打开单个数据的展示窗口
+     * @param ecode 对象代码
+     * @param ename 对象名称
+     * @param eid 对象ID
+     */
+    function openViewWindow(ecode,ename,eid)
+    /**
+     * 得到当前工作区域的TAB窗口对象
+     */
+    function getCurrentTabWindow()
+    /**
+     * 获得源页面的对象，通常在对话框中会调用
+     * @param fromPageId
+     */
+    function getFromWindow(fromPageId)
+    /**
+     * 打开对话框，有“确定”和“取消”按钮
+     * @param title
+     * @param url
+     */
+    function openWindow(title,url)
+    /**
+     * 打开对话框，只有“关闭”按钮
+     * @param title
+     * @param url
+     */
+    function openWindow2(title,url)
+    /**
+     * 打开对话框，有“提交”、“确定”、“关闭”按钮
+     * @param title
+     * @param url
+     */
+    function openWindow3(title,url)
+    /**
+     * 打开查询对话框
+     * @param queryField
+     * @param fields
+     */
+    function openSearchWindow(queryField,fields)
+    /**
+     * 重置对话框的宽高
+     * @param options
+     */
+    function resizeWindow(options)
+    /**
+     * 关闭当前对话框
+     */
+    function closeWindow()
+    /**
+     * 在顶部中间显示提示信息
+     * @param msg
+     */
+    function showMessage(msg)
+    /**
+     * 在顶部中间显示提示信息
+     * @param msg
+     */
+    function lgxInfo(msg)
+    /**
+     * 取得主操作页面
+     */
+    function getRootWindow()
+	
 #插件管理
 ## 插件安装
 ## 插件配置
@@ -267,5 +779,7 @@ documment_selector:'.markdown-body',
 ztreeStyle: { width:'260px', overflow: 'auto', position: 'fixed', 'z-index': 2147483647, border: '0px none', left: '0px', top: '0px' } 
 });
 $("title").text("LINGX模型驱动开发平台-抛开编码细节、专注业务逻辑");
+$("body").css("margin","0px");
+$("body").css("margin-left","320px");
  });
 </SCRIPT> 

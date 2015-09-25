@@ -397,6 +397,7 @@ img {
 <p>在一个系统中有许多树型结构的数据，LINGX为其定制了树型展示模版，同时对该数据表有一个要求，上级ID的字段名必须为“fid”；
 另外有两个可选字段：1、state节点打开（open）或关闭（close）；2、iconCls节点的图标样式。</p>
 <h4>fid 与本表的ID类型一至</h4>
+<p>根节点的fid必须为0</p>
 <h4>state 字符串</h4>
 <h4>iconCls 字符串</h4>
 <h3>属性模型详解</h3>
@@ -477,8 +478,8 @@ img {
 public class NotNullValidator extends AbstractValidator {
 
 public NotNullValidator(){
-    this.type=&quot;time4&quot;;//调用键值，不可与其他的键值重复
-    this.name=&quot;时间4&quot;;//显示值
+    this.setType(&quot;notnull&quot;);//调用键值，不可与其他的键值重复
+    this.setName(&quot;不可为空&quot;);//显示值
 }
 private static final long serialVersionUID = 5104545985585423221L;
 
@@ -497,6 +498,8 @@ public boolean valid(String code,Object value, String param, //value要验证的
 <p>将20150716220123转为2015-07-16</p>
 <h3>日期解释器2</h3>
 <p>将20150716220123转为2015-07-16 22:02:23</p>
+<h3>时间4</h3>
+<p>将1200转为12:00</p>
 <h3>自定义解释器</h3>
 <p>自定义解释器，需要继承于抽象类: com.lingx.support.model.interpreter.AbstractInterpreter </p>
 <p>IContext 执行上下文，详见API</p>
@@ -506,8 +509,8 @@ public boolean valid(String code,Object value, String param, //value要验证的
 public class Time4Interpreter extends AbstractInterpreter{
 
 public Time4Interpreter(){
-    this.type=&quot;time4&quot;;//调用键值，不可与其他的键值重复
-    this.name=&quot;时间4&quot;;//显示值
+    this.setType(&quot;time4&quot;);//调用键值，不可与其他的键值重复
+    this.setName(&quot;时间4&quot;);//显示值
 }
 private static final long serialVersionUID = 3727950655388868120L;
 
@@ -598,20 +601,7 @@ JdbcTemplate jdbc=applicationContext.getBean(&quot;jdbcTemplate&quot;,JdbcTempla
 </code></pre>
 
 <h3>综合API ILingxService</h3>
-<pre><code>package com.lingx.core.service;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.context.ApplicationContext;
-
-import com.lingx.core.engine.IContext;
-import com.lingx.core.exception.LingxPluginException;
-import com.lingx.core.plugin.IPlugin;
-import com.lingx.core.plugin.PluginManager;
-
-/** 
+<pre><code>/** 
  * @author www.lingx.com
  * @version 创建时间：2015年4月5日 上午11:30:24 
  * lingx框架的核心服务类
@@ -754,7 +744,7 @@ public Object script(IScript script,IContext context) throws LingxScriptExceptio
 </code></pre>
 
 <h2>执行器中的内置对象API</h2>
-<h3>LINGX</h3>
+<h3>LINGX 核心处理类</h3>
 <pre><code>/**
  * 获取Spring环境
  * @return
@@ -833,7 +823,7 @@ public String getTime();
 public String passwordEncode(String password, String userid);
 </code></pre>
 
-<h3>CUser</h3>
+<h3>CUser 当前用户</h3>
 <p>当前登陆用户的API</p>
 <pre><code>public String getId();//取ID
 public String getAccount();//取账号
@@ -841,11 +831,98 @@ public String getName();//取名字
 public String getStatus();//取状态
 </code></pre>
 
-<h3>JDBC</h3>
+<h3>JDBC 数据库操作</h3>
 <p>详见以下链接：</p>
 <blockquote>
 <p>http://docs.spring.io/spring/docs/1.1.5/api/org/springframework/jdbc/core/JdbcTemplate.html</p>
 </blockquote>
+<h3>REQUEST 请求对象</h3>
+<pre><code>/**
+ * 根据参数名获取请求参数值
+ * @param key
+ * @return
+ */
+String getParameter(String key);
+/**
+ * 根据参数名获取请求参数值，如果参数为空时，返回缺省值
+ * @param key
+ * @param defaultValue 
+ * @return
+ */
+String getParameter(String key,String defaultValue);
+/**
+ * 设置请求周期内属性
+ * @param key
+ * @param value
+ */
+void setAttribute(String key,Object value);
+/**
+ * 获取属性
+ * @param key
+ * @return
+ */
+Object getAttribute(String key);
+/**
+ * 获取请求所有参数值数组
+ * @param key
+ * @return
+ */
+String[] getParameterValues(String key);
+/**
+ * 获取所有属性
+ * @return
+ */
+Map&lt;String,Object&gt; getAttributes();
+/**
+ * 获取所有参数
+ * @return
+ */
+Map&lt;String,String[]&gt; getParameters();
+/**
+ * 获取所有参数名
+ * @return
+ */
+Set&lt;String&gt; getParameterNames();
+</code></pre>
+
+<h3>CONTEXT 执行上下文</h3>
+<pre><code>/**
+ * 获取RQEUEST对象，等同HttpServletRequest
+ * @return
+ */
+public IHttpRequest getRequest();
+/**
+ * 获取SESSION对象，等同HttpSession
+ * @return
+ */
+public Map&lt;String,Object&gt; getSession();
+/**
+ * 设置当前对象模型
+ * @param entity
+ */
+public void setEntity(IEntity entity);
+/**
+ * 设置当前方法模型
+ * @param method
+ */
+public void setMethod(IMethod method);
+/**
+ * 取出当前对象模型
+ * @return
+ */
+public IEntity getEntity();
+/**
+ * 取出当前方法模型
+ * @return
+ */
+public IMethod getMethod();
+/**
+ * 取出当前登录用户
+ * @return
+ */
+public UserBean getUserBean();
+</code></pre>
+
 <h3>自定义执行器中的API</h3>
 <pre><code>@Configuration
 public class ApiConfig {
@@ -864,6 +941,9 @@ public IScriptApi getLingxApi(){
 </code></pre>
 
 <h2>前端开发中的JavaScript API</h2>
+<h3>页面通用API</h3>
+<blockquote>
+<p>必须引入 &lt;%@ include file=&quot;/lingx/include/include_JavaScriptAndCss.jsp&quot;%&gt; </p>
 <pre><code>/**
  * 获取页面ID
  * @returns {___anonymous_pageId}
@@ -952,6 +1032,7 @@ function lgxInfo(msg)
 function getRootWindow()
 </code></pre>
 
+</blockquote>
 <h1>插件管理</h1>
 <h2>插件安装</h2>
 <h2>插件配置</h2>
