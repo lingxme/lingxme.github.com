@@ -601,13 +601,55 @@ public Object output(Object value, IContext context, IPerformer jsper)
 <h3>菜单授权</h3>
 <h3>功能授权</h3>
 <h1>开发环境</h1>
-<h2>本地开发-Eclipse</h2>
+<h2>本地集在开发环境-Eclipse</h2>
 <h3>创建Web项目</h3>
 <h3>下载并导入相关jar</h3>
 <h3>安装数据库</h3>
 <h3>配置数据库</h3>
-<h2>在线开发-WEB</h2>
-<h3>创建对象</h3>
+<h2>在线集在开发环境-WEB</h2>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925145207.png" /></p>
+<h3>工具栏区</h3>
+<h4>创建对象</h4>
+<ul>
+<li>创建数据表对象</li>
+<li>创建数据视图对象</li>
+<li>创建查询对象</li>
+<li>创建克隆对象</li>
+</ul>
+<h4>规则编辑</h4>
+<blockquote>
+<p>权限管理-横向数据权限</p>
+</blockquote>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925164746.png" /></p>
+<p>左右两边都是数据权限元数据，中间是逻辑运算符；可以进行条件分组。条件分组之间也可以进行逻辑运算</p>
+<h4>纵向权限</h4>
+<blockquote>
+<p>权限管理-纵向数据权限</p>
+</blockquote>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925165353.png" /></p>
+<p>根据角色来指定模型对该角色的不可见字段，如果用户有多个角色；字段可见是或关系。</p>
+<h4>对象预览</h4>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925170812.png" /></p>
+<p>在线开发的功能可直接预览，所见即所得。</p>
+<h4>写入功能树</h4>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925171056.png" /></p>
+<p>只有打勾的功能点才能进行授权与操作。</p>
+<h4>插件管理</h4>
+<h4>参数设置</h4>
+<h3>对象区</h3>
+<h3>工作区</h3>
+<h4>添加属性</h4>
+<h4>添加方法</h4>
+<h4>添加验证器</h4>
+<h4>添加解释器</h4>
+<h4>添加执行器</h4>
+<h4>复制</h4>
+<h4>粘贴</h4>
+<h4>删除</h4>
+<h3>属性区</h3>
+<h3>代码编辑区</h3>
+<h4>编辑框</h4>
+<h4>API</h4>
 <h1>API</h1>
 <h2>Java/Jsp开发的平台API</h2>
 <h3>取出Spring容器</h3>
@@ -749,7 +791,7 @@ public IMethod getMethod();
 public UserBean getUserBean();
 </code></pre>
 
-<h3>IPerformer</h3>
+<h3>IPerformer 脚本执行器</h3>
 <pre><code>/**
  * 执行脚本
  * @param script
@@ -961,6 +1003,7 @@ public IScriptApi getLingxApi(){
 <h3>页面通用API</h3>
 <blockquote>
 <p>必须引入 &lt;%@ include file=&quot;/lingx/include/include_JavaScriptAndCss.jsp&quot;%&gt; </p>
+</blockquote>
 <pre><code>/**
  * 获取页面ID
  * @returns {___anonymous_pageId}
@@ -1049,7 +1092,6 @@ function lgxInfo(msg)
 function getRootWindow()
 </code></pre>
 
-</blockquote>
 <h3>对话框自定义的内置API</h3>
 <p>在对话框自定义界面中，为了响应对话框的“确定”按扭；需要在页面中定义lingxSubmit()函数</p>
 <pre><code>function lingxSubmitFn(){

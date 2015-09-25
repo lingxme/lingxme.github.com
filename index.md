@@ -329,13 +329,69 @@ IPerformer 脚本执行，详见API
 ### 菜单授权
 ### 功能授权
 #开发环境
-## 本地开发-Eclipse
+## 本地集在开发环境-Eclipse
 ### 创建Web项目
 ### 下载并导入相关jar
 ### 安装数据库
 ### 配置数据库
-## 在线开发-WEB
-### 创建对象
+## 在线集在开发环境-WEB
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925145207.png)
+### 工具栏区
+在上图的页面头部区域是工具栏区
+#### 创建对象
+- 创建数据表对象
+- 创建数据视图对象
+- 创建查询对象
+- 创建克隆对象
+#### 规则编辑
+>权限管理-横向数据权限
+
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925164746.png)
+
+左右两边都是数据权限元数据，中间是逻辑运算符；可以进行条件分组。条件分组之间也可以进行逻辑运算
+#### 纵向权限
+>权限管理-纵向数据权限
+
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925165353.png)
+
+根据角色来指定模型对该角色的不可见字段，如果用户有多个角色；字段可见是或关系。
+#### 对象预览
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925170812.png)
+
+在线开发的功能可直接预览，所见即所得。
+
+#### 写入功能树
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925171056.png)
+
+只有打勾的功能点才能进行授权与操作。
+#### 插件管理
+功能插件的启用、禁用操作；插件参数的设置与修改
+#### 参数设置
+系统全局参数的设置与修改。可直接刷新内存中的缓存数据，立即生效。
+
+通过LINGX或ILingxService的getContfigValue()来获取。
+###对象区
+在集成开发环境的页面左部区域是对象列表区，简称对象区
+###工作区
+在集成开发环境的页面中部区域是工作区
+####添加属性
+####添加方法
+####添加验证器
+####添加解释器
+####添加执行器
+####复制
+####粘贴
+####删除
+###属性区
+在集成开发环境的页面右部区域是属性区
+
+对象、属性、方法、验证器、解释器、执行器等，都有自己的属性。这里是相应的属性设置区
+###代码编辑区
+在集成开发环境的页面底部区域是代码编辑区
+####编辑框
+代码编辑框
+####API
+执行器内置对象的简易说明
 #API
 ##Java/Jsp开发的平台API
 ###取出Spring容器
@@ -479,7 +535,7 @@ IPerformer 脚本执行，详见API
 	 * @return
 	 */
 	public UserBean getUserBean();
-###IPerformer
+###IPerformer 脚本执行器
 	/**
 	 * 执行脚本
 	 * @param script
@@ -689,7 +745,7 @@ IPerformer 脚本执行，详见API
 ##前端开发中的JavaScript API
 ###页面通用API
 > 必须引入 <%@ include file="/lingx/include/include_JavaScriptAndCss.jsp"%> 
->
+
     /**
      * 获取页面ID
      * @returns {___anonymous_pageId}
@@ -804,6 +860,7 @@ IPerformer 脚本执行，详见API
 		failure:callbackFormSubmit
 	});
 	}
+
 #插件管理
 ## 插件安装
 ## 插件配置
