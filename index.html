@@ -339,6 +339,11 @@ img {
 </blockquote>
 <h1>模型架构</h1>
 <h2>对象</h2>
+<p>为了对象与数据库的方便管理与识别，建议数据库表名称与字段全部用小写，如果有多单词可下划线“_”划分；数据库表以t开头，视图以&quot;v&quot;开头，再接上系统名称、模块名称、子模块名称。
+例如：</p>
+<p>toa_work_rule OA系统的考勤规则</p>
+<p>toa_work_rule_date OA系统的考勤规则中的日期规则</p>
+<p>更多资料请参考tlingx开头的表结构</p>
 <h3>表对象</h3>
 <p>表对象即为数据库表的对象模型，表字段为对象属性，字段名称为属性代码，字段注释为属性名称；默认情况下字段与属性一一映射，特殊情况下可以多个属性映射同一字段，或没有属性来映射这段。</p>
 <p>在表对象生成期间会自动生成“添加、修改、删除”方法模型，来对该表数据进行增删改查。</p>
@@ -373,7 +378,9 @@ img {
 </ul>
 <h2>配置</h2>
 <h3>列表参数配置</h3>
+<p>该参数的作用约等于EXTJS的GRID控件参数。只在列表展示的有效，个别参数在树型展示中也有效果，如排序</p>
 <h3>数据权限配置</h3>
+<p>控制数据的横向权限，具体请看 权限管理-横向数据权限 的章节</p>
 <h2>属性</h2>
 <p>属性模型可以理解为数据库表字段的化身，数据元的载体；描述字段的类型、输入、输出、引用关系。</p>
 <p>属性模型有验证器与解释器两种子模型。</p>
@@ -399,7 +406,9 @@ img {
 <h4>fid 与本表的ID类型一至</h4>
 <p>根节点的fid必须为0</p>
 <h4>state 字符串</h4>
+<p>树型节点的展开与关闭控制，只对根节点与中间节点有效，叶子节点都为关闭。</p>
 <h4>iconCls 字符串</h4>
+<p>展示的图标样式，需要导入相应的CSS文件</p>
 <h3>属性模型详解</h3>
 <ul>
 <li>属性代码	该属性的引用ID</li>
@@ -457,9 +466,17 @@ img {
 <h2>验证器</h2>
 <p>验证器模型是在数据表单提交时，进行数据是否合格的检查；不合格将不作处理。属于属性模型的子模型。</p>
 <h3>表达式验证器</h3>
-<p>默认验证器，需要在表达式</p>
-<h3>不为空验证器</h3>
+<p>默认验证器，需要在表达式写javascript代码</p>
+<pre><code>name.length&gt;=2
+</code></pre>
+
+<h3>不可为空验证器</h3>
+<p>不可为空验证器，是前端后端都会验证；启用方法也比较特殊，只需要属性字段上“不可为空”设为true</p>
 <h3>正则验证器</h3>
+<p>通过正则表达式来校验数据的合法性，以下就是电子邮箱的验证正则表达式</p>
+<pre><code>^([a-zA-Z0-9]*[-_]?[a-zA-Z0-9]+)*@([a-zA-Z0-9]*[-_]?[a-zA-Z0-9]+)+[\\.][A-Za-z]{2,3}([\\.][A-Za-z]{2})?$
+</code></pre>
+
 <h3>电子邮箱验证器</h3>
 <h3>两数字之间</h3>
 <h3>数字不大于{}</h3>
@@ -931,7 +948,7 @@ private ILingxService lingxService;
 
 @Bean(name=&quot;LINGX&quot;)//这里的LINGX就是在执行器中的内置对象名
 public IScriptApi getLingxApi(){
-    IScriptApi lingx=new DefaultScriptApi();
+    DefaultScriptApi lingx=new DefaultScriptApi();
     lingx.setBean(this.lingxService);
     return lingx;
 
@@ -1033,6 +1050,34 @@ function getRootWindow()
 </code></pre>
 
 </blockquote>
+<h3>对话框自定义的内置API</h3>
+<p>在对话框自定义界面中，为了响应对话框的“确定”按扭；需要在页面中定义lingxSubmit()函数</p>
+<pre><code>function lingxSubmitFn(){
+// 非空检查 
+var fields=Ext.getCmp(&quot;form&quot;).getForm().getFields();
+var objCache={};
+for(var i=0;i&lt;fields.items.length;i++){
+    var obj=fields.items[i].getSubmitData();
+    for(var temp in obj){
+        objCache[temp]=obj[temp];
+    }
+}
+for(var i=0;i&lt;fieldsCache.length;i++){
+    var f=fieldsCache[i];
+    if(f.isNotNull&amp;&amp;!objCache[f.code]){
+        lgxInfo(f.name+&quot;不可为空&quot;);
+        return ;
+    }
+}
+// 非空检查 end
+Ext.getCmp(&quot;form&quot;).getForm().submit({
+    params:{t:3},
+    success: callbackFormSubmit,
+    failure:callbackFormSubmit
+});
+}
+</code></pre>
+
 <h1>插件管理</h1>
 <h2>插件安装</h2>
 <h2>插件配置</h2>

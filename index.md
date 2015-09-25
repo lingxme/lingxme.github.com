@@ -44,6 +44,15 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 > 我的开发环境是：win7(64位)+JDK 1.7(64位)+Tomcat 7.0+MariaDB 5.5 (64位)
 # 模型架构
 ## 对象
+为了对象与数据库的方便管理与识别，建议数据库表名称与字段全部用小写，如果有多单词可下划线“_”划分；数据库表以t开头，视图以"v"开头，再接上系统名称、模块名称、子模块名称。
+例如：
+
+toa\_work\_rule OA系统的考勤规则
+
+toa\_work\_rule\_date OA系统的考勤规则中的日期规则
+
+更多资料请参考tlingx开头的表结构
+
 ### 表对象
 表对象即为数据库表的对象模型，表字段为对象属性，字段名称为属性代码，字段注释为属性名称；默认情况下字段与属性一一映射，特殊情况下可以多个属性映射同一字段，或没有属性来映射这段。
 
@@ -81,7 +90,9 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 
 ## 配置
 ###列表参数配置
+该参数的作用约等于EXTJS的GRID控件参数。只在列表展示的有效，个别参数在树型展示中也有效果，如排序
 ###数据权限配置
+控制数据的横向权限，具体请看 权限管理-横向数据权限 的章节
 ## 属性
 属性模型可以理解为数据库表字段的化身，数据元的载体；描述字段的类型、输入、输出、引用关系。
 
@@ -116,7 +127,9 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 ####fid 与本表的ID类型一至
 根节点的fid必须为0
 ####state 字符串
+树型节点的展开与关闭控制，只对根节点与中间节点有效，叶子节点都为关闭。
 ####iconCls 字符串
+展示的图标样式，需要导入相应的CSS文件
 
 ### 属性模型详解
 
@@ -176,9 +189,17 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 ## 验证器
 验证器模型是在数据表单提交时，进行数据是否合格的检查；不合格将不作处理。属于属性模型的子模型。
 ### 表达式验证器
-默认验证器，需要在表达式
-### 不为空验证器
+默认验证器，需要在表达式写javascript代码
+
+	name.length>=2
+	
+### 不可为空验证器
+不可为空验证器，是前端后端都会验证；启用方法也比较特殊，只需要属性字段上“不可为空”设为true
 ### 正则验证器
+通过正则表达式来校验数据的合法性，以下就是电子邮箱的验证正则表达式
+	
+	^([a-zA-Z0-9]*[-_]?[a-zA-Z0-9]+)*@([a-zA-Z0-9]*[-_]?[a-zA-Z0-9]+)+[\\.][A-Za-z]{2,3}([\\.][A-Za-z]{2})?$
+
 ### 电子邮箱验证器
 ### 两数字之间
 ### 数字不大于{}
@@ -657,7 +678,7 @@ IPerformer 脚本执行，详见API
 	
 	@Bean(name="LINGX")//这里的LINGX就是在执行器中的内置对象名
 	public IScriptApi getLingxApi(){
-		IScriptApi lingx=new DefaultScriptApi();
+		DefaultScriptApi lingx=new DefaultScriptApi();
 		lingx.setBean(this.lingxService);
 		return lingx;
 		
@@ -755,7 +776,34 @@ IPerformer 脚本执行，详见API
      * 取得主操作页面
      */
     function getRootWindow()
-	
+
+### 对话框自定义的内置API
+在对话框自定义界面中，为了响应对话框的“确定”按扭；需要在页面中定义lingxSubmit()函数
+
+	function lingxSubmitFn(){
+	// 非空检查 
+	var fields=Ext.getCmp("form").getForm().getFields();
+	var objCache={};
+	for(var i=0;i<fields.items.length;i++){
+		var obj=fields.items[i].getSubmitData();
+		for(var temp in obj){
+			objCache[temp]=obj[temp];
+		}
+	}
+	for(var i=0;i<fieldsCache.length;i++){
+		var f=fieldsCache[i];
+		if(f.isNotNull&&!objCache[f.code]){
+			lgxInfo(f.name+"不可为空");
+			return ;
+		}
+	}
+	// 非空检查 end
+	Ext.getCmp("form").getForm().submit({
+		params:{t:3},
+		success: callbackFormSubmit,
+		failure:callbackFormSubmit
+	});
+	}
 #插件管理
 ## 插件安装
 ## 插件配置
