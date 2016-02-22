@@ -452,6 +452,7 @@ img {
 <li>对象选择combo</li>
 <li>对话框列表选择combogrid2</li>
 <li>对话框树型选择combotree2</li>
+<li>数据导出excel</li>
 </ul>
 <h3>方法模型详解</h3>
 <ul>
@@ -600,6 +601,43 @@ public Object output(Object value, IContext context, IPerformer jsper)
 <h3>角色授权</h3>
 <h3>菜单授权</h3>
 <h3>功能授权</h3>
+<h1>工作流程</h1>
+<h2>流程元素</h2>
+<h3>开始节点</h3>
+<h3>结束节点</h3>
+<h3>手动任务</h3>
+<h3>自动任务</h3>
+<h3>会签任务</h3>
+<h3>子流程任务</h3>
+<h3>前进线</h3>
+<h3>后退线</h3>
+<h2>表单控件</h2>
+<h3>表格 table</h3>
+<h3>列表 list</h3>
+<h3>单行文本框 text</h3>
+<h3>多行文本框 textarea</h3>
+<h3>选择项 select</h3>
+<h3>签章 image</h3>
+<h3>用户单选</h3>
+<h3>用户多选</h3>
+<h3>组织单选</h3>
+<h3>组织多选</h3>
+<h3>外部链接</h3>
+<h3>日期 yyyy-MM-dd</h3>
+<h3>日期时间 yyyy-MM-dd HH:mm</h3>
+<h3>提示框</h3>
+<h3>内容Well</h3>
+<h3>红色标志</h3>
+<h3>环境变量</h3>
+<h2>在线表单设计</h2>
+<h2>在线流程设计</h2>
+<h1>数据库规则</h1>
+<ul>
+<li>目前只支持MYSQL5.5/5.6</li>
+<li>主键名字必须为id,类型可以为自增或UUID</li>
+<li>日期/时间类型必须用字符来表示，日期时间建议设置为char(14)，例：20150217152536；日期设置为char(8)，例：20150217</li>
+<li>树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段</li>
+</ul>
 <h1>开发环境</h1>
 <h2>本地集在开发环境-Eclipse</h2>
 <h3>创建Web项目</h3>
@@ -609,6 +647,7 @@ public Object output(Object value, IContext context, IPerformer jsper)
 <h2>在线集在开发环境-WEB</h2>
 <p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925145207.png" /></p>
 <h3>工具栏区</h3>
+<p>在上图的页面头部区域是工具栏区</p>
 <h4>创建对象</h4>
 <ul>
 <li>创建数据表对象</li>
@@ -635,9 +674,14 @@ public Object output(Object value, IContext context, IPerformer jsper)
 <p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925171056.png" /></p>
 <p>只有打勾的功能点才能进行授权与操作。</p>
 <h4>插件管理</h4>
+<p>功能插件的启用、禁用操作；插件参数的设置与修改</p>
 <h4>参数设置</h4>
+<p>系统全局参数的设置与修改。可直接刷新内存中的缓存数据，立即生效。</p>
+<p>通过LINGX或ILingxService的getContfigValue()来获取。</p>
 <h3>对象区</h3>
+<p>在集成开发环境的页面左部区域是对象列表区，简称对象区</p>
 <h3>工作区</h3>
+<p>在集成开发环境的页面中部区域是工作区</p>
 <h4>添加属性</h4>
 <h4>添加方法</h4>
 <h4>添加验证器</h4>
@@ -647,10 +691,63 @@ public Object output(Object value, IContext context, IPerformer jsper)
 <h4>粘贴</h4>
 <h4>删除</h4>
 <h3>属性区</h3>
+<p>在集成开发环境的页面右部区域是属性区</p>
+<p>对象、属性、方法、验证器、解释器、执行器等，都有自己的属性。这里是相应的属性设置区</p>
 <h3>代码编辑区</h3>
+<p>在集成开发环境的页面底部区域是代码编辑区</p>
 <h4>编辑框</h4>
+<p>代码编辑框</p>
 <h4>API</h4>
+<p>执行器内置对象的简易说明</p>
 <h1>API</h1>
+<h2>转义表达式</h2>
+<p>使用场景
+1. 在对象的属性设置默认值，方便编辑
+例如：在添加用户时：有默认当前应用
+${CUser.getApp().getId()}</p>
+<ol>
+<li>在菜单设置中加入筛选条件，在“备注”字段加入条件转义
+例如：
+某菜单下的用户列表，只能显示当前同一行政组织用户
+${org_id=${CUser.getOrgId()}}</li>
+</ol>
+<h3>通用转义值</h3>
+<ul>
+<li>CDate 当前日期,20150222</li>
+<li>CDateTime 当前日期时间,20150222175521</li>
+<li>CUser.getId() 当前登录的用户ID</li>
+<li>CUser.getId() 当前登录的用户姓名</li>
+<li>CUser.getOrgId() 当前登录的组织ID</li>
+<li>CUser.getOrgName() 当前登录的组织名称</li>
+<li>CUser.getApp().getId() 当前应用ID</li>
+<li>CUser.getApp().getName() 当前应用名称</li>
+</ul>
+<h3>流程转义值</h3>
+<ul>
+<li><em>USER</em>ID 发起人的用户ID</li>
+<li><em>USER</em>NAME 发起人的姓名</li>
+<li><em>ORG</em>ID 发起人的部门ID</li>
+<li><em>ORG</em>NAME 发起人的部门名称</li>
+</ul>
+<h3>默认值扩展</h3>
+<p>实现接口  com.lingx.core.model.IValue，再把实现类注册到Spring
+例如：</p>
+<pre><code>public class DateValue implements IValue {
+    public static final SimpleDateFormat sdfDate=new SimpleDateFormat(&quot;yyyyMMdd&quot;);
+
+    @Override
+    public String getSourceValue() {
+        return &quot;${CDate}&quot;;
+    }
+
+    @Override
+    public String getTargetValue(IContext context) {
+        return sdfDate.format(new Date());
+    }
+
+}
+</code></pre>
+
 <h2>Java/Jsp开发的平台API</h2>
 <h3>取出Spring容器</h3>
 <p>在Java代码中不需要直接取Spring对象，直接使用@Service注解便可取得相应对象</p>
@@ -1128,6 +1225,8 @@ Ext.getCmp(&quot;form&quot;).getForm().submit({
 <h3>AOP切面编程</h3>
 <h3>工作调度@Scheduled</h3>
 <h1>在线更新</h1>
+<h2>在线打包</h2>
+<h2>在线部署</h2>
 <p></article>
 <script type="text/javascript" src="javascripts/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="javascripts/jquery.ztree.core-3.5.min.js"></script>

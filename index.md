@@ -176,6 +176,7 @@ toa\_work\_rule\_date OA系统的考勤规则中的日期规则
 - 对象选择combo
 - 对话框列表选择combogrid2
 - 对话框树型选择combotree2
+- 数据导出excel
 
 ### 方法模型详解
 - 方法代码	该方法调用的唯一标识
@@ -328,6 +329,41 @@ IPerformer 脚本执行，详见API
 ### 角色授权
 ### 菜单授权
 ### 功能授权
+#工作流程
+##流程元素
+###开始节点
+###结束节点
+###手动任务
+###自动任务
+###会签任务
+###子流程任务
+###前进线
+###后退线
+##表单控件
+###表格 table
+###列表 list
+###单行文本框 text
+###多行文本框 textarea
+###选择项 select
+###签章 image
+###用户单选
+###用户多选
+###组织单选
+###组织多选
+###外部链接
+### 日期 yyyy-MM-dd
+### 日期时间 yyyy-MM-dd HH:mm
+###提示框
+###内容Well
+###红色标志
+###环境变量
+##在线表单设计
+##在线流程设计
+#数据库规则
+- 目前只支持MYSQL5.5/5.6
+- 主键名字必须为id,类型可以为自增或UUID
+- 日期/时间类型必须用字符来表示，日期时间建议设置为char(14)，例：20150217152536；日期设置为char(8)，例：20150217
+- 树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段
 #开发环境
 ## 本地集在开发环境-Eclipse
 ### 创建Web项目
@@ -393,6 +429,50 @@ IPerformer 脚本执行，详见API
 ####API
 执行器内置对象的简易说明
 #API
+##转义表达式
+使用场景
+1. 在对象的属性设置默认值，方便编辑
+例如：在添加用户时：有默认当前应用
+${CUser.getApp().getId()}
+
+2. 在菜单设置中加入筛选条件，在“备注”字段加入条件转义
+例如：
+某菜单下的用户列表，只能显示当前同一行政组织用户
+${org_id=${CUser.getOrgId()}}
+
+###通用转义值
+ - CDate 当前日期,20150222
+ - CDateTime 当前日期时间,20150222175521
+ - CUser.getId() 当前登录的用户ID
+ - CUser.getId() 当前登录的用户姓名
+ - CUser.getOrgId() 当前登录的组织ID
+ - CUser.getOrgName() 当前登录的组织名称
+ - CUser.getApp().getId() 当前应用ID
+ - CUser.getApp().getName() 当前应用名称
+###流程转义值
+ - _USER_ID 发起人的用户ID
+ - _USER_NAME 发起人的姓名
+ - _ORG_ID 发起人的部门ID
+ - _ORG_NAME 发起人的部门名称
+###默认值扩展
+实现接口  com.lingx.core.model.IValue，再把实现类注册到Spring
+例如：
+
+	public class DateValue implements IValue {
+		public static final SimpleDateFormat sdfDate=new SimpleDateFormat("yyyyMMdd");
+	
+		@Override
+		public String getSourceValue() {
+			return "${CDate}";
+		}
+	
+		@Override
+		public String getTargetValue(IContext context) {
+			return sdfDate.format(new Date());
+		}
+	
+	}
+
 ##Java/Jsp开发的平台API
 ###取出Spring容器
 在Java代码中不需要直接取Spring对象，直接使用@Service注解便可取得相应对象
@@ -869,7 +949,8 @@ IPerformer 脚本执行，详见API
 ###AOP切面编程
 ###工作调度@Scheduled
 # 在线更新
-
+##在线打包
+##在线部署
  </article>
 <script type="text/javascript" src="javascripts/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="javascripts/jquery.ztree.core-3.5.min.js"></script>
