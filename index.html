@@ -628,6 +628,11 @@ public Object output(Object value, IContext context, IPerformer jsper)
 <h3>组织单选</h3>
 <h3>组织多选</h3>
 <h3>外部链接</h3>
+<p>iframe内嵌URL，固定在URL加入参数instance_id，流程实例ID</p>
+<h3>列表控件</h3>
+<p>列表数据控件，原本“外部链接”就可以支持列表控件（通过iframe内嵌对象的gird方法），目前列表的内部控件只支持文件框；开发本控件是为了结合手机端流程的列表数据统一管理。
+主要设置“扩展参数”，例如：{&quot;name&quot;:&quot;list1&quot;,&quot;field&quot;:[&quot;姓名&quot;,&quot;性别&quot;,&quot;年龄&quot;,&quot;联系电话&quot;]}
+实际存储与调用的参数名为：list<em>list1。需要加前缀&quot;list</em>&quot;</p>
 <h3>日期 yyyy-MM-dd</h3>
 <h3>日期时间 yyyy-MM-dd HH:mm</h3>
 <h3>提示框</h3>
