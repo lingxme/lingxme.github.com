@@ -159,16 +159,16 @@ toa\_work\_rule\_date OA系统的考勤规则中的日期规则
 
 方法模型有两个子模型属性和执行器。
 
-### JSON方法
+### 【类型】JSON方法
 在一个REQUEST请求处理完成后返回JSON格式数据。大部分方法是JSON方法。
  
 当JSON没有方法属性时，直接后台执行该方法。
 
-### JSP方法
+### 【类型】JSP方法
 在一个REQUEST请求处理完在后返回JSP界面，通常在自定义开发中会用到。
-### URL方法
+### 【类型】URL方法
 该方法重定向到设置的URL。如下图重定向到百度
-### JavaScript方法
+### 【类型】JavaScript方法
 在一个REQUEST请求处理完成后，返回JavaScript，并执行。
 ### 默认生成方法
 - 	对象添加add
