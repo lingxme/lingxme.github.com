@@ -387,26 +387,117 @@ JDBC是内置的API对象，可以进入与数据库的任务交互；JDBC等于
 	ret;
 
 ###自定义执行器
+自定义的执行器，必须实现接口IExecutor
+
+	public class ComboExecutor extends AbstractModel implements IExecutor 
+
+以上是完整的自定义执器
+
+	public Object execute(IContext context, IPerformer performer)
+			throws LingxScriptException {
+
+		IEntity entity=(IEntity)context.getEntity();
+		List<String> textField=modelService.getTextField(entity);
+		String valueField=modelService.getValueField(entity);
+		try {
+			String sql=this.queryService.getSelectSql(context,performer);
+			//System.out.println("--------ComboExecutor-----------");
+			//System.out.println(sql);
+			List<Map<String,Object>> list=jdbcTemplate.queryForList(LingxUtils.sqlInjection(sql));
+			if(list!=null)
+			for(Map<String,Object> map:list){
+				map.put("value", map.get(valueField.toUpperCase()));
+				StringBuilder sb=new StringBuilder();
+				for(String s:textField){
+					sb.append(map.get(s.toUpperCase())).append("-");
+				}
+				sb.deleteCharAt(sb.length()-1);
+				map.put("text", sb.toString());
+			}
+			return list;
+		} catch (Exception e) {
+			throw new LingxScriptException("数据读取异常",e);
+		} 
+	}
+
+在自定义执行器之后，需要根据 lingx-default-method.xml 里方式把组合成新方法配置到Spring容器中。平台就可以对其进行权限管理与执行
 # 视图模版
+在一般业务数据只有两种数据结构，一种是列表结构，另一种则是树型结构。
+
+> 在要进行下面操作时，需要在菜单“平台管理”-“对象管理”，在列表找到“用户管理”、“组织管理”；将其状态变更为“开发”。再退出重新登录
 ## 列表模版
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614211955.png)
+> 用户管理-预览
 ## 树形模版
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212300.png)
+> 组织管理-预览
 ## 列表级联
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212532.png)
+
+> 系统管理-用户管理
 ## 树形级联
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212712.png)
+> 系统管理-角色管理
 ## 多重级联
+![](http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212752.png)
+> 系统管理-组织管理
 # 表单控件
+基于EXTJS构建的表单数据输入控件，在非EXTJS构建的表单。不能直接使用以下控件，但可以变通使用
+
+> 在设置对象或方法中任意一个属性时，会**自动同步**给其他同代码的字段。如不需同步，则设置属性中的**字段同步**为false
 ## 文本
 ### 单行文本
+普通的单行文本输入框等于EXTJS中的textfield
 ### 多行文本
+普通的多行文本输入框等于EXTJS中的textarea
 ## 密码
+普通的密码文本输入框
 ## 选择
+选择控件是一个改造后的combobox,支持任意对象的数据选择，显示与值可以在对象属性中配置；也可以选择字典
+
+*对象选择设置方法*
+
+- **输入控件**设置为"选择控件"
+- **指向对象模型**设置为被选对象
+
+*字典选择设置方法*
+
+- **输入控件**设置为"选择控件"
+- **控件参数**设置为字典代码，例如：SF。
+- **指向对象模型**设置为“字典子项” 列表中的最后一个
+
 ## 单选
+
+- **输入控件**设置为"单选框"
+- **控件参数**设置为字典代码，例如：SF。
+- **指向对象模型**设置为“字典子项” 列表中的最后一个
 ## 多选
+
+- **输入控件**设置为"多选框"
+- **控件参数**设置为字典代码，例如：SF。
+- **指向对象模型**设置为“字典子项” 列表中的最后一个
 ## 数字
+数字输入框
 ## 日期
+日期在数据库存储格式为20160614，在显示或编辑中显示为2016-06-14；所以需要添加解释器（日期8,8是指字符长度）
+
+> 对象属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制
+## 日期时间
+
+日期在数据库存储格式为20160614220625，在显示或编辑中显示为2016-06-14 22:06:25；所以需要添加解释器（日期14,14是指字符长度）
+
+> 对象属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制
 ## 只读
+如果某字段不允许修改，则可以设置为只读
 ## 文件
+文件上传控件，服务端文件接收已固定，不需额外添加代码
 ## 图片
+同文件控件，只是在列表会以小图展示
 ## 对话框
+以下四个对话选择框，都可以在**控件参数**中设置筛选条件；参数类型为JSON
+
+> 列表结构 - {"status":"1"}
+> 树型结构 - {"fid":"f9779920-202b-41f5-8615-0776c88c78a8"}
 ### 列表单选对话框
 ### 列表多选对话框
 ### 树形单选对话框
@@ -417,6 +508,7 @@ JDBC是内置的API对象，可以进入与数据库的任务交互；JDBC等于
 ###JSP扩展权限
 ## 数据权限
 ###横向数据权限
+> http://www.cnblogs.com/leoxie2011/archive/2012/03/20/2408542.html
 ###纵向数据权限
 ##分级授权
 ### 组织授权

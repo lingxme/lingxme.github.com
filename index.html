@@ -642,26 +642,131 @@ ret;
 </code></pre>
 
 <h3>自定义执行器</h3>
+<p>自定义的执行器，必须实现接口IExecutor</p>
+<pre><code>public class ComboExecutor extends AbstractModel implements IExecutor 
+</code></pre>
+
+<p>以上是完整的自定义执器</p>
+<pre><code>public Object execute(IContext context, IPerformer performer)
+        throws LingxScriptException {
+
+    IEntity entity=(IEntity)context.getEntity();
+    List&lt;String&gt; textField=modelService.getTextField(entity);
+    String valueField=modelService.getValueField(entity);
+    try {
+        String sql=this.queryService.getSelectSql(context,performer);
+        //System.out.println(&quot;--------ComboExecutor-----------&quot;);
+        //System.out.println(sql);
+        List&lt;Map&lt;String,Object&gt;&gt; list=jdbcTemplate.queryForList(LingxUtils.sqlInjection(sql));
+        if(list!=null)
+        for(Map&lt;String,Object&gt; map:list){
+            map.put(&quot;value&quot;, map.get(valueField.toUpperCase()));
+            StringBuilder sb=new StringBuilder();
+            for(String s:textField){
+                sb.append(map.get(s.toUpperCase())).append(&quot;-&quot;);
+            }
+            sb.deleteCharAt(sb.length()-1);
+            map.put(&quot;text&quot;, sb.toString());
+        }
+        return list;
+    } catch (Exception e) {
+        throw new LingxScriptException(&quot;数据读取异常&quot;,e);
+    } 
+}
+</code></pre>
+
+<p>在自定义执行器之后，需要根据 lingx-default-method.xml 里方式把组合成新方法配置到Spring容器中。平台就可以对其进行权限管理与执行</p>
 <h1>视图模版</h1>
+<p>在一般业务数据只有两种数据结构，一种是列表结构，另一种则是树型结构。</p>
+<blockquote>
+<p>在要进行下面操作时，需要在菜单“平台管理”-“对象管理”，在列表找到“用户管理”、“组织管理”；将其状态变更为“开发”。再退出重新登录</p>
+</blockquote>
 <h2>列表模版</h2>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614211955.png" /></p>
+<blockquote>
+<p>用户管理-预览</p>
+</blockquote>
 <h2>树形模版</h2>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212300.png" /></p>
+<blockquote>
+<p>组织管理-预览</p>
+</blockquote>
 <h2>列表级联</h2>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212532.png" /></p>
+<blockquote>
+<p>系统管理-用户管理</p>
+</blockquote>
 <h2>树形级联</h2>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212712.png" /></p>
+<blockquote>
+<p>系统管理-角色管理</p>
+</blockquote>
 <h2>多重级联</h2>
+<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212752.png" /></p>
+<blockquote>
+<p>系统管理-组织管理</p>
+</blockquote>
 <h1>表单控件</h1>
+<p>基于EXTJS构建的表单数据输入控件，在非EXTJS构建的表单。不能直接使用以下控件，但可以变通使用</p>
+<blockquote>
+<p>在设置对象或方法中任意一个属性时，会<strong>自动同步</strong>给其他同代码的字段。如不需同步，则设置属性中的<strong>字段同步</strong>为false</p>
+</blockquote>
 <h2>文本</h2>
 <h3>单行文本</h3>
+<p>普通的单行文本输入框等于EXTJS中的textfield</p>
 <h3>多行文本</h3>
+<p>普通的多行文本输入框等于EXTJS中的textarea</p>
 <h2>密码</h2>
+<p>普通的密码文本输入框</p>
 <h2>选择</h2>
+<p>选择控件是一个改造后的combobox,支持任意对象的数据选择，显示与值可以在对象属性中配置；也可以选择字典</p>
+<p><em>对象选择设置方法</em></p>
+<ul>
+<li><strong>输入控件</strong>设置为&quot;选择控件&quot;</li>
+<li><strong>指向对象模型</strong>设置为被选对象</li>
+</ul>
+<p><em>字典选择设置方法</em></p>
+<ul>
+<li><strong>输入控件</strong>设置为&quot;选择控件&quot;</li>
+<li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
+<li><strong>指向对象模型</strong>设置为“字典子项” 列表中的最后一个</li>
+</ul>
 <h2>单选</h2>
+<ul>
+<li><strong>输入控件</strong>设置为&quot;单选框&quot;</li>
+<li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
+<li><strong>指向对象模型</strong>设置为“字典子项” 列表中的最后一个</li>
+</ul>
 <h2>多选</h2>
+<ul>
+<li><strong>输入控件</strong>设置为&quot;多选框&quot;</li>
+<li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
+<li><strong>指向对象模型</strong>设置为“字典子项” 列表中的最后一个</li>
+</ul>
 <h2>数字</h2>
+<p>数字输入框</p>
 <h2>日期</h2>
+<p>日期在数据库存储格式为20160614，在显示或编辑中显示为2016-06-14；所以需要添加解释器（日期8,8是指字符长度）</p>
+<blockquote>
+<p>对象属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制</p>
+</blockquote>
+<h2>日期时间</h2>
+<p>日期在数据库存储格式为20160614220625，在显示或编辑中显示为2016-06-14 22:06:25；所以需要添加解释器（日期14,14是指字符长度）</p>
+<blockquote>
+<p>对象属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制</p>
+</blockquote>
 <h2>只读</h2>
+<p>如果某字段不允许修改，则可以设置为只读</p>
 <h2>文件</h2>
+<p>文件上传控件，服务端文件接收已固定，不需额外添加代码</p>
 <h2>图片</h2>
+<p>同文件控件，只是在列表会以小图展示</p>
 <h2>对话框</h2>
+<p>以下四个对话选择框，都可以在<strong>控件参数</strong>中设置筛选条件；参数类型为JSON</p>
+<blockquote>
+<p>列表结构 - {&quot;status&quot;:&quot;1&quot;}
+树型结构 - {&quot;fid&quot;:&quot;f9779920-202b-41f5-8615-0776c88c78a8&quot;}</p>
+</blockquote>
 <h3>列表单选对话框</h3>
 <h3>列表多选对话框</h3>
 <h3>树形单选对话框</h3>
@@ -672,6 +777,9 @@ ret;
 <h3>JSP扩展权限</h3>
 <h2>数据权限</h2>
 <h3>横向数据权限</h3>
+<blockquote>
+<p>http://www.cnblogs.com/leoxie2011/archive/2012/03/20/2408542.html</p>
+</blockquote>
 <h3>纵向数据权限</h3>
 <h2>分级授权</h2>
 <h3>组织授权</h3>
