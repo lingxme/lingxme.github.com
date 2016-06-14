@@ -319,20 +319,20 @@ img {
 <p>平台提供了类似于windows更新中心的功能，通过在线下载、安装补丁；来修复BUG与功能改进。将来计划可通过在线订购业务包或插件包，实现按需下载。</p>
 <h2>第三方引用</h2>
 <ul>
-<li>Spring 3.2:主要应用IOC、AOP、事件、JDBC、事务管理、工作调度</li>
-<li>druid 1.0:数据库连接池</li>
+<li>Spring 3.2：主要应用IOC、AOP、事件、JDBC、事务管理、工作调度</li>
+<li>druid 1.0：数据库连接池</li>
 <li>fastjson 1.1：JSON格式化工具</li>
-<li>log4j 2.3:日志工具</li>
-<li>guava 18.0:内部缓存</li>
-<li>ExtJS 4.2:前端展示</li>
+<li>log4j 2.3：日志工具</li>
+<li>guava 18.0：内部缓存</li>
+<li>ExtJS 4.2：前端展示</li>
 </ul>
 <h2>运行环境</h2>
 <ul>
 <li>操作系统：Windows系列/Linux系列/MacOS 32位或64位都可以</li>
-<li>Java环境:JDK 1.6/1.7 32位或64位都可以</li>
+<li>Java环境：JDK 1.6/1.7 32位或64位都可以</li>
 <li>WEB容器：Tomcat 6.0/7.0 是我的开发环境，理论上 Jetty、JBoss等也是可以的，LINGX是标准Servlet 2.5工程</li>
-<li>数据库:MySQL 5.5+</li>
-<li>浏览器:谷歌chrome、火狐Firefox</li>
+<li>数据库：MySQL 5.5+</li>
+<li>浏览器：谷歌chrome、火狐Firefox</li>
 </ul>
 <blockquote>
 <p>我的开发环境是：win7(64位)+JDK 1.7(64位)+Tomcat 7.0+MariaDB 5.5 (64位)</p>
@@ -1175,12 +1175,15 @@ public String passwordEncode(String password, String userid);
 public String getAccount();//取账号
 public String getName();//取名字
 public String getStatus();//取状态
+public String getOrg().getId();//取当前用户行政组织ID
+public String getOrg().getName();//取当前用户行政组织名称
 </code></pre>
 
 <h3>JDBC 数据库操作</h3>
 <p>详见以下链接：</p>
 <blockquote>
-<p>http://docs.spring.io/spring/docs/1.1.5/api/org/springframework/jdbc/core/JdbcTemplate.html</p>
+<p>http://my.oschina.net/u/437232/blog/279530
+http://docs.spring.io/spring/docs/1.1.5/api/org/springframework/jdbc/core/JdbcTemplate.html</p>
 </blockquote>
 <h3>REQUEST 请求对象</h3>
 <pre><code>/**
@@ -1411,6 +1414,100 @@ Ext.getCmp(&quot;form&quot;).getForm().submit({
 <h2>插件安装</h2>
 <h2>插件配置</h2>
 <h2>插件开发</h2>
+<pre><code>package com.lingx.plugin.upload.ext;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import com.lingx.core.plugin.IPlugin;
+import com.lingx.support.web.action.UploadAction;
+@Component
+public class UploadExtPlugin implements IPlugin {
+public static Logger logger = LogManager.getLogger(UploadExtPlugin.class);
+@Resource
+private IUploadExtService uploadExtService;
+@Resource
+private UploadAction uploadAction;
+private boolean enable=true;
+@Override
+public String getId() {
+    return &quot;upload-ext-plugin&quot;;
+}
+
+@Override
+public String getName() {
+    return &quot;文档外置上传插件&quot;;
+}
+
+@Override
+public String getDetail() {
+    return &quot;由于多容器署时，会导致文档上传混乱，且文档服务需要大容量硬盘；所以独立部署文档系统，通过使用本插件系统上传的文件，均转发到文档系统。\r\n需要参数：targetURL，流方式上传路径&quot;;
+}
+
+@Override
+public String getAuthor() {
+    return &quot;www.lingx.com&quot;;
+}
+
+@Override
+public String getVersion() {
+    return &quot;1.0&quot;;
+}
+
+@Override
+public boolean isEnable() {
+    return enable;
+}
+
+@Override
+public void setEnable(boolean enable) {
+    this.enable=enable;
+}
+
+@Override
+public void init(Map&lt;String, Object&gt; params) {
+    try {
+        String targetURL=params.get(&quot;targetURL&quot;).toString();
+        this.uploadExtService.setTargetURL(targetURL);
+        this.uploadAction.setType(2);//设置为从IUploadService
+    } catch (Exception e) {
+        logger.error(&quot;plugin init error:&quot;+e.getMessage());
+        //e.printStackTrace();
+    }       
+}
+
+@Override
+public void start() {
+    // TODO Auto-generated method stub
+
+}
+
+@Override
+public void stop() {
+    // TODO Auto-generated method stub
+
+}
+
+@Override
+public void destory() {
+    // TODO Auto-generated method stub
+
+}
+
+@Override
+public Map&lt;String, Object&gt; execute(Map&lt;String, Object&gt; params) {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+}
+</code></pre>
+
 <h3>IPlugin接口的execute方法</h3>
 <h3>AOP切面编程</h3>
 <h3>工作调度@Scheduled</h3>

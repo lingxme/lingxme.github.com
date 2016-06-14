@@ -904,9 +904,12 @@ ${org_id=${CUser.getOrgId()}}
 	public String getAccount();//取账号
 	public String getName();//取名字
 	public String getStatus();//取状态
+	public String getOrg().getId();//取当前用户行政组织ID
+	public String getOrg().getName();//取当前用户行政组织名称
 
 ###JDBC 数据库操作
 详见以下链接：
+> http://my.oschina.net/u/437232/blog/279530
 > http://docs.spring.io/spring/docs/1.1.5/api/org/springframework/jdbc/core/JdbcTemplate.html
 
 ###REQUEST 请求对象
@@ -1136,6 +1139,101 @@ ${org_id=${CUser.getOrgId()}}
 ## 插件安装
 ## 插件配置
 ## 插件开发
+	
+	package com.lingx.plugin.upload.ext;
+
+	import java.util.Map;
+
+	import javax.annotation.Resource;
+
+	import org.apache.logging.log4j.LogManager;
+	import org.apache.logging.log4j.Logger;
+	import org.springframework.stereotype.Component;
+	
+	import com.lingx.core.plugin.IPlugin;
+	import com.lingx.support.web.action.UploadAction;
+	@Component
+	public class UploadExtPlugin implements IPlugin {
+	public static Logger logger = LogManager.getLogger(UploadExtPlugin.class);
+	@Resource
+	private IUploadExtService uploadExtService;
+	@Resource
+	private UploadAction uploadAction;
+	private boolean enable=true;
+	@Override
+	public String getId() {
+		return "upload-ext-plugin";
+	}
+
+	@Override
+	public String getName() {
+		return "文档外置上传插件";
+	}
+
+	@Override
+	public String getDetail() {
+		return "由于多容器署时，会导致文档上传混乱，且文档服务需要大容量硬盘；所以独立部署文档系统，通过使用本插件系统上传的文件，均转发到文档系统。\r\n需要参数：targetURL，流方式上传路径";
+	}
+
+	@Override
+	public String getAuthor() {
+		return "www.lingx.com";
+	}
+
+	@Override
+	public String getVersion() {
+		return "1.0";
+	}
+
+	@Override
+	public boolean isEnable() {
+		return enable;
+	}
+
+	@Override
+	public void setEnable(boolean enable) {
+		this.enable=enable;
+	}
+
+	@Override
+	public void init(Map<String, Object> params) {
+		try {
+			String targetURL=params.get("targetURL").toString();
+			this.uploadExtService.setTargetURL(targetURL);
+			this.uploadAction.setType(2);//设置为从IUploadService
+		} catch (Exception e) {
+			logger.error("plugin init error:"+e.getMessage());
+			//e.printStackTrace();
+		}		
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void destory() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Map<String, Object> execute(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	}
+
+
 ###IPlugin接口的execute方法
 ###AOP切面编程
 ###工作调度@Scheduled
