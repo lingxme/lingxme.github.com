@@ -241,7 +241,7 @@ function factor(opts ,count,current) {
 		_zTree: null,
 		_headers: [],
 		_header_offsets: [],
-		_header_nodes: [{ id:1, pId:0, name:"www.lingx.com",open:true}],
+		_header_nodes: [{ id:1, pId:0, name:"官网：www.lingx.com",open:true}],
 		debug: true,
 		/*
 		 * 使用标题作为anchor

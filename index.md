@@ -184,11 +184,11 @@ toa\_work\_rule\_date OA系统的考勤规则中的日期规则
 
 ### 默认实现方法
 - 对象展示view
-- 对象列表grid
-- 对象树型tree
+- 对象列表grid(包含对话框列表**单选**)
+- 对象树型tree(包含对话框树型**单选**)
 - 对象选择combo
-- 对话框列表选择combogrid2
-- 对话框树型选择combotree2
+- 对话框列表**多选**combogrid2
+- 对话框树型**多选**combotree2
 - 数据导出excel
 - 高级查询search
 
