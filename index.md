@@ -1248,7 +1248,7 @@ ${org_id=${CUser.getOrgId()}}
 ##在线打包
 ##在线部署
  </article>
-<script type="text/javascript" src="javascripts/jquery-1.4.4.min.js"></script>
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="javascripts/jquery.ztree.core-3.5.min.js"></script>
 <script type="text/javascript" src="javascripts/ztree_toc.js"></script>
 <link rel="stylesheet" href="stylesheets/zTreeStyle/zTreeStyle.css" type="text/css">
