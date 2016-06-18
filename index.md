@@ -1265,3 +1265,12 @@ $("body").css("margin","0px");
 $("body").css("margin-left","320px");
  });
 </SCRIPT> 
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?2624aa48241825af0869177ea4c22796";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
