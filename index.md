@@ -80,9 +80,13 @@ toa\_work\_rule\_date OA系统的考勤规则中的日期规则
 - **对象类型**	1、表对象，2、视图对象，3、查询对象、4、克隆对象
 - **数据表名**	映射到数据库的资源名称
 - **级联对象**	可以同时将有引用该对象的对象进行级联展示，最简单的一级级联方式：tlingx_user(直接填写对象代码，前提是需要被级联对象有一属性指向当前对象)
-> 一级级联 `[{name:'隶属分组',entity:'tgps_cargroup_car',method:'grid',rule:''}]`
+> 一级级联 `[{name:'隶属分组',entity:'tgps_cargroup_car',method:'grid',rule:'',where:{}}]`
 > 
-> 二级级联 `[{name:'所属用户' ,entity:'tuser',method:'grid',rule:'torguser'}]`
+> 二级级联 `[{name:'所属用户' ,entity:'tuser',method:'grid',rule:'torguser',where:{}}]`
+> 
+> rule是级联规则，目前只有二级级联中有用到
+> 
+> where是附加条件，值为JSON数据，例如:where:{"status":"1"}
 
 - **查询条件** 	对象数据筛选， 以and 开头；该字段是表达式，所以常量需要声明
 - **显示模式**	列表展示或树型展示 grid/tree；目前在对象级联会用到

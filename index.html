@@ -368,8 +368,10 @@ img {
 <li><strong>级联对象</strong>	可以同时将有引用该对象的对象进行级联展示，最简单的一级级联方式：tlingx_user(直接填写对象代码，前提是需要被级联对象有一属性指向当前对象)</li>
 </ul>
 <blockquote>
-<p>一级级联 <code>[{name:'隶属分组',entity:'tgps_cargroup_car',method:'grid',rule:''}]</code></p>
-<p>二级级联 <code>[{name:'所属用户' ,entity:'tuser',method:'grid',rule:'torguser'}]</code></p>
+<p>一级级联 <code>[{name:'隶属分组',entity:'tgps_cargroup_car',method:'grid',rule:'',where:{}}]</code></p>
+<p>二级级联 <code>[{name:'所属用户' ,entity:'tuser',method:'grid',rule:'torguser',where:{}}]</code></p>
+<p>rule是级联规则，目前只有二级级联中有用到</p>
+<p>where是附加条件，值为JSON数据，例如:where:{&quot;status&quot;:&quot;1&quot;}</p>
 </blockquote>
 <ul>
 <li><strong>查询条件</strong> 	对象数据筛选， 以and 开头；该字段是表达式，所以常量需要声明</li>
