@@ -553,6 +553,8 @@ iframe内嵌URL，固定在URL加入参数instance_id，流程实例ID
 列表数据控件，原本“外部链接”就可以支持列表控件（通过iframe内嵌对象的gird方法），目前列表的内部控件只支持文件框；开发本控件是为了结合手机端流程的列表数据统一管理。
 主要设置“扩展参数”，例如：{"name":"list1","field":["姓名","性别","年龄","联系电话"]}
 实际存储与调用的参数名为：list_list1。需要加前缀"list_"
+### 附件上传
+单个附件上传，需要在扩展参数中填写：{"name":"file1"}
 ### 日期 yyyy-MM-dd
 ### 日期时间 yyyy-MM-dd HH:mm
 ###提示框
@@ -643,6 +645,7 @@ ${CUser.getApp().getId()}
 ${org_id=${CUser.getOrgId()}}
 
 ###通用转义值
+ - CYear 当前年份
  - CDate 当前日期,20150222
  - CDateTime 当前日期时间,20150222175521
  - CUser.getId() 当前登录的用户ID

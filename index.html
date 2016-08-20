@@ -825,6 +825,8 @@ ret;
 <p>列表数据控件，原本“外部链接”就可以支持列表控件（通过iframe内嵌对象的gird方法），目前列表的内部控件只支持文件框；开发本控件是为了结合手机端流程的列表数据统一管理。
 主要设置“扩展参数”，例如：{&quot;name&quot;:&quot;list1&quot;,&quot;field&quot;:[&quot;姓名&quot;,&quot;性别&quot;,&quot;年龄&quot;,&quot;联系电话&quot;]}
 实际存储与调用的参数名为：list<em>list1。需要加前缀&quot;list</em>&quot;</p>
+<h3>附件上传</h3>
+<p>单个附件上传，需要在扩展参数中填写：{&quot;name&quot;:&quot;file1&quot;}</p>
 <h3>日期 yyyy-MM-dd</h3>
 <h3>日期时间 yyyy-MM-dd HH:mm</h3>
 <h3>提示框</h3>
@@ -915,6 +917,7 @@ ${org_id=${CUser.getOrgId()}}</li>
 </ol>
 <h3>通用转义值</h3>
 <ul>
+<li>CYear 当前年份</li>
 <li>CDate 当前日期,20150222</li>
 <li>CDateTime 当前日期时间,20150222175521</li>
 <li>CUser.getId() 当前登录的用户ID</li>
