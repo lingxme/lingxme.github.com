@@ -374,8 +374,9 @@ img {
 <p>where是附加条件，值为JSON数据，例如:where:{&quot;status&quot;:&quot;1&quot;}</p>
 </blockquote>
 <ul>
-<li><strong>查询条件</strong> 	对象数据筛选， 以and 开头；该字段是表达式，所以常量需要声明</li>
+<li><strong>查询条件</strong> 	对象数据筛选， 以and 开头；该字段是表达式，所以常量需要声明，例如：' and status=1'(注意有引号)</li>
 <li><strong>显示模式</strong>	列表展示或树型展示 grid/tree；目前在对象级联会用到</li>
+<li><strong>模型类型</strong>   Entity 实体类型</li>
 </ul>
 <h2>配置</h2>
 <h3>列表参数配置</h3>
@@ -388,6 +389,18 @@ img {
 <li><strong>排序方式</strong> 升序asc,降序desc；默认是desc</li>
 <li><strong>查询字段</strong>	在列表展示的右上角有一“查询”按钮，默认是可以用所有条件进行查询。该配置是指定哪些字段可进行查询，多字段用英文逗号隔开;例如：name,status</li>
 </ul>
+<blockquote>
+<p>因为字符编码为UTF-8，所以在中文排序时需要转GBK；例如：convert(name using gbk)</p>
+</blockquote>
+<ul>
+<li><strong>排序方式</strong> asc 升序或desc 降序</li>
+<li><strong>查询字段</strong> 默认不提供查询功能，必须在这里设置要查询的字段代码；多个字段用英文逗号隔开。树形展示不能查询</li>
+<li><strong>双击操作</strong> 在双击列表项或树型节点时，对当前记录做对应操作，默认是view，可以修改为edit,del或其他自定义方法</li>
+<li><strong>双击窗体样式</strong> 目前有四种：默认、只读、全屏1、全屏2;正常情况下是默认、只读是只能看不能提交、全屏1是默认的最大化版，全屏2是打开新的窗体有可能会被浏览器阻止</li>
+</ul>
+<blockquote>
+<p>其它没有说明的参数一般不建义修改</p>
+</blockquote>
 <h3>数据权限配置</h3>
 <p>控制数据的横向权限，具体请看 <strong>权限管理-横向数据权限</strong> 的章节</p>
 <h2>属性</h2>
@@ -407,16 +420,16 @@ img {
 <p>在业务开发的过程中经常需要处理些像性别、状态。需要事先设定可选值；在LINGX中统一把这类型属性，叫字典属性。</p>
 <p>字典属性不可以使用解释器，平台会自动根据其引用情况自动对焦。</p>
 <p>字典属性需要在事先在系统字典表里加入要引用的字典项</p>
-<p>以下是用户状态字段的引用情况：
-<strong>输入控件</strong>为 “radio” 单选框，
-<strong>控件参数</strong>为“YHZT”用户状态的代码，
-<strong>指向对象模型</strong>必须为“tlingx_optionitem”</p>
+<p>以下是用户状态字段的引用情况：</p>
+<p><strong>输入控件</strong>为 “radio” 单选框</p>
+<p><strong>控件参数</strong>为“YHZT”用户状态的代码</p>
+<p><strong>指向对象模型</strong>必须为“tlingx_optionitem” 字典子项</p>
 <h3>树型属性</h3>
 <p>在一个系统中有许多树型结构的数据，LINGX为其定制了树型展示模版，同时对该数据表有一个要求，</p>
 <ul>
 <li>上级ID的字段名必须为“fid”，根节点的值为0；</li>
 <li>树型节点开关字段名state，值为open/close:打开（open）或关闭（close），可选；</li>
-<li>节点的图标样式icon_cls，可以在数据库表字段中指定样式图标，可选</li>
+<li>节点的图标样式icon_cls，可以在数据库表字段中指定样式图标，可选。<strong>详见tlingx_org对象</strong></li>
 </ul>
 <h4>fid 与本表的ID类型一至</h4>
 <p>根节点的fid必须为0</p>
@@ -440,6 +453,9 @@ img {
 <li><strong>字段同步</strong>	在修改同一对象下同名属性（对象属性和方法属性）时是否同步和被同步</li>
 <li><strong>默认值</strong>	在编辑时的默认值,可以是基本数据类型:1,张三；也可以用默认值表达式${CUser.getOrgId()}、${CDate}、${CDateTime}；还可以用Request对象的参数名${paramName}</li>
 <li><strong>列表宽度</strong>	在列表展示时，该字段的显示宽度，单位px</li>
+<li><strong>是否转义</strong> 在指向对象模型的字段，在显示时默认会转义。比如：用户性别在数据库中值为1，在显示的时候会跟会字典的配置转化成男。</li>
+<li><strong>是否连接</strong> 默认在转义的时候是带连接可以在界面中点击查看被连接的记录信息，在这里可以关闭。比如用户性别指向是字典信息，没有其他意义可关闭。所有的字典类转义都可以关闭连接，即设置false。</li>
+<li><strong>备注</strong> 在可以这可填写备注信息</li>
 </ul>
 <h2>方法</h2>
 <p>方法模型代表着一个事件处理；例如：用户列表查询、添加用户、JSP界面跳转；描述事件的处理方式。</p>
@@ -477,18 +493,22 @@ img {
 <li><strong>是否验证</strong>	是否启用验证，默认启用</li>
 <li><strong>当前记录</strong>	是否需要当前记录作为参数</li>
 <li><strong>映射字段</strong>	将当前记录的值，传给该字段</li>
-<li><strong>是否可见</strong>	是否可见</li>
 <li><strong>右键菜单</strong>	是否把该功能加入右键菜单中</li>
+<li><strong>是否可见</strong>	是否在界面中显示</li>
 <li><strong>是否可用</strong>	是否可用与是否可见的区别是，不可用将显示灰色不可点击的按钮</li>
 <li><strong>返回类型</strong>	返回类型json,jsp,javascript,url对应以上的四种方法</li>
 <li><strong>提示消息</strong>	在编辑框头部的消息提示</li>
 <li><strong>操作确认消息</strong>	在点“确定”按钮是弹出来的提示消息</li>
-<li><strong>扩展参数</strong>	是JSON对象，目前有属性height设置编辑框的高度</li>
+<li><strong>扩展参数</strong>	是JSON对象，目前有属性height设置编辑框的高度，例如:{&quot;height&quot;:600}</li>
+<li><strong>前置脚本</strong>   在这里可以写启用该方法的条件，条件不足时。界面提示【前置消息】。需要时也可以在这里业务逻辑，相当于前置拦截器。</li>
+<li><strong>前置消息</strong>   在前置脚本结果为flase时，界面上展示该值。详见用户管理的重置密码。</li>
+<li><strong>备注</strong>	在这里填写备注信息</li>
 <li><strong>图标样式</strong>	更改按钮上的图标，图标在界面的右下角需鼠标滚轮才可见，图标样式规则首字母大写其余全小写；例：Linkadd</li>
 </ul>
 <h2>验证器</h2>
 <p>验证器模型是在数据表单提交时，进行数据是否合格的检查；不合格将不作处理。属于属性模型的子模型。</p>
 <p>如需指定返回提示消息,就修改返回消息的内容</p>
+<p><strong>验证器需要手工添加在方法内部的属性模型中，在对象的属性模型设置验证器是不启作用的</strong></p>
 <h3>表达式验证器</h3>
 <p>默认验证器，需要在表达式写javascript代码</p>
 <pre><code>name.length&gt;=2
@@ -814,6 +834,10 @@ ret;
 <h3>单行文本框 text</h3>
 <h3>多行文本框 textarea</h3>
 <h3>选择项 select</h3>
+<p>选项加载方式有两种。</p>
+<p>1、静态：在表单设计器中，直接给select添加option子项</p>
+<p>2、动态：在表单设计器中，设置【指向对象模型】在表单中可以直接动态调取该对象的combo方法，注意授权</p>
+<p>同样也可以引用字典，设置【指向对象模型】为【选项子项】，在扩展参数中填入字典代码。</p>
 <h3>签章 image</h3>
 <h3>用户单选</h3>
 <h3>用户多选</h3>
@@ -929,10 +953,10 @@ ${org_id=${CUser.getOrgId()}}</li>
 </ul>
 <h3>流程转义值</h3>
 <ul>
-<li><em>USER</em>ID 发起人的用户ID</li>
-<li><em>USER</em>NAME 发起人的姓名</li>
-<li><em>ORG</em>ID 发起人的部门ID</li>
-<li><em>ORG</em>NAME 发起人的部门名称</li>
+<li>_USER_ID 发起人的用户ID</li>
+<li>_USER_NAME 发起人的姓名</li>
+<li>_ORG_ID 发起人的部门ID</li>
+<li>_ORG_NAME 发起人的部门名称</li>
 </ul>
 <h3>默认值扩展</h3>
 <p>实现接口  com.lingx.core.model.IValue，再把实现类注册到Spring
