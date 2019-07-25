@@ -35,9 +35,9 @@ WEB在线创建和管理模型、模型的关联关系、表单控件设置、�
 - ExtJS 4.2：前端展示
 ##运行环境
 - 操作系统：Windows系列/Linux系列/MacOS 32位或64位都可以
-- Java环境：JDK 1.6/1.7 32位或64位都可以
-- WEB容器：Tomcat 6.0/7.0 是我的开发环境，理论上 Jetty、JBoss等也是可以的，LINGX是标准Servlet 2.5工程
-- 数据库：MySQL 5.5+
+- Java环境：JDK 1.8 32位或64位都可以
+- WEB容器：Tomcat 8.0 是我的开发环境，理论上 Jetty、JBoss等也是可以的，LINGX是标准Servlet 2.5工程
+- 数据库：MySQL 5.5+，我是用MariaDB 5.5
 - 浏览器：谷歌chrome、火狐Firefox
 
 
