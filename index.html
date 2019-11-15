@@ -298,28 +298,9 @@ img {
 <blockquote>
 <p>简化信息管理软件开发；抛开编码细节、专注业务逻辑。</p>
 </blockquote>
-<h2>特色</h2>
-<h3>模型驱动</h3>
-<p>数据库表和视图来创建基本的数据模型，该模型具有属性、方法、解释器、验证器、执行器、配置等子模型；此外还有高级的查询模型、克隆模型。</p>
-<h3>在线开发</h3>
-<p>WEB在线创建和管理模型、模型的关联关系、表单控件设置、功能权限设置、数据权限设置；还有一个简易的数据库管理工具。</p>
-<h3>级联展示</h3>
-<p>视图模板主要分两大类：列表展示与树形展示；扩展为列表级联展示与树型级联展示（支持中间表级联，一个界面现可以达到5级联）、列表选择对话框与树形选择对话框（单选、多选）。</p>
-<h3>分级授权</h3>
-<p>通过权限配置，可以实现分级管理人员，分级管理人员有独立的组织、角色、功能、菜单；包括业务模块的功能与数据均可分级授权。</p>
-<h3>表单控件</h3>
-<p>基于ExtJS的控件扩展，控件参数与值都是动态填充，除了常规的文本、密码、单选、多选外，特别加入对象模型选择控件，文件上传控件。</p>
-<h3>插件管理</h3>
-<p>1、IPlugin的execute方法实现特殊功能
-2、Spring的AOP功能，接管系统接口
-3、Spring注解方式实现任务调度</p>
-<h3>事件监听</h3>
-<p>平台内部逻辑会埋下事件点，事件监听就是找到相应的事件点，实现相应的接口，现有的事件点比较少，可通过反馈快速添加。</p>
-<h3>在线更新</h3>
-<p>平台提供了类似于windows更新中心的功能，通过在线下载、安装补丁；来修复BUG与功能改进。将来计划可通过在线订购业务包或插件包，实现按需下载。</p>
 <h2>第三方引用</h2>
 <ul>
-<li>Spring 3.2：主要应用IOC、AOP、事件、JDBC、事务管理、工作调度</li>
+<li>Spring 3.2：主要应用IOC、AOP、事件、JDBC、事务管理、定时调度</li>
 <li>druid 1.0：数据库连接池</li>
 <li>fastjson 1.1：JSON格式化工具</li>
 <li>log4j 2.3：日志工具</li>
@@ -330,14 +311,24 @@ img {
 <ul>
 <li>操作系统：Windows系列/Linux系列/MacOS 32位或64位都可以</li>
 <li>Java环境：JDK 1.8 32位或64位都可以</li>
-<li>WEB容器：Tomcat 8.0 是我的开发环境，理论上 Jetty、JBoss等也是可以的，LINGX是标准Servlet 2.5工程</li>
+<li>WEB容器：Tomcat 8.0 是我的开发环境，Jetty、JBoss等也是可以的，标准Servlet 2.5工程</li>
 <li>数据库：MySQL 5.5+，我是用MariaDB 5.5</li>
 <li>浏览器：谷歌chrome、火狐Firefox</li>
 </ul>
 <blockquote>
 <p>我的开发环境是：win7(64位)+JDK 1.8(64位)+Tomcat 8.0+MariaDB 5.5 (64位)</p>
 </blockquote>
+<h1>数据库建表约束</h1>
+<ol>
+<li>当前只能支持MySQL数据库，支持版本 5.5、5.6、5.7</li>
+<li>每个表必须要有id字段做为主键，可以用数字(自增)或字符(UUID)</li>
+<li>时间字段不用Date类型，用char(8)、char(14)来表示日期与日期时间，例：20191115与20191115114450</li>
+<li>树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段</li>
+</ol>
 <h1>模型架构</h1>
+<blockquote>
+<p>模型有对象、属性、方法、验证器、解析器、执行器</p>
+</blockquote>
 <h2>对象</h2>
 <p>为了对象与数据库的方便管理与识别，建议数据库表名称与字段全部用小写，如果有多单词可下划线“_”划分；数据库表以t开头，视图以&quot;v&quot;开头，再接上系统名称、模块名称、子模块名称。
 例如：</p>
@@ -352,8 +343,6 @@ img {
 <h3>视图对象</h3>
 <p>视图对象即为数据库视图的对象模型，只是引用对象不同。在平台的使用方式并无二致。
 视图名称建议以“v” 为前缀。</p>
-<h3>查询对象</h3>
-<p>对SELECT语句进行封装，使其可查询、排序、展示</p>
 <h3>克隆对象</h3>
 <p>克隆对象是其他对象的完全复制品，克隆对象与原对象完全独立，在使用功能上与原对象无异；主要是对同一模型具有两种业务时进行克隆。
 例如公共表附件，邮件附件与订单附件的隶属对象不一样，数据权限也不一样，所以需要克隆对象；使得在业务逻辑上是两个表，实际上是操作同一表。
@@ -363,7 +352,7 @@ img {
 <li>属性	说明</li>
 <li><strong>对象代码</strong>	唯一标识</li>
 <li><strong>对象名称</strong>	对象方便展示的标识</li>
-<li><strong>对象类型</strong>	1、表对象，2、视图对象，3、查询对象、4、克隆对象</li>
+<li><strong>对象类型</strong>	1、表对象，2、视图对象，3、克隆对象</li>
 <li><strong>数据表名</strong>	映射到数据库的资源名称</li>
 <li><strong>级联对象</strong>	可以同时将有引用该对象的对象进行级联展示，最简单的一级级联方式：tlingx_user(直接填写对象代码，前提是需要被级联对象有一属性指向当前对象)</li>
 </ul>
@@ -387,7 +376,10 @@ img {
 <li><strong>行数</strong>	每页显示的记录数，默认为20</li>
 <li><strong>排序字段</strong> 可以是当前对象的任意字段代码，默认为id</li>
 <li><strong>排序方式</strong> 升序asc,降序desc；默认是desc</li>
-<li><strong>查询字段</strong>	在列表展示的右上角有一“查询”按钮，默认是可以用所有条件进行查询。该配置是指定哪些字段可进行查询，多字段用英文逗号隔开;例如：name,status</li>
+<li>
+<p><strong>查询字段</strong>	在列表展示的右上角有一“查询”按钮，默认是可以用所有条件进行查询。该配置是指定哪些字段可进行查询，多字段用英文逗号隔开;例如：name,status，也可以用自定义查询，例如：</p>
+<p>[{&quot;name&quot;:&quot;分组&quot;,&quot;code&quot;:&quot;group&quot;,&quot;xtype&quot;:&quot;textfield&quot;,&quot;sql&quot;:&quot;id in (select car<em>id from tgps</em>group_car where group<em>id in(select id from tgps</em>group where name like '%${group}%'))&quot;,&quot;url&quot;:&quot;&quot;},{&quot;name&quot;:&quot;车牌&quot;,&quot;code&quot;:&quot;carno&quot;,&quot;xtype&quot;:&quot;textfield&quot;,&quot;sql&quot;:&quot;carno like '%${carno}%'&quot;,&quot;url&quot;:&quot;&quot;},{&quot;name&quot;:&quot;终端&quot;,&quot;code&quot;:&quot;tid&quot;,&quot;xtype&quot;:&quot;textfield&quot;,&quot;sql&quot;:&quot;id like '%${tid}%'&quot;,&quot;url&quot;:&quot;&quot;}]</p>
+</li>
 </ul>
 <blockquote>
 <p>因为字符编码为UTF-8，所以在中文排序时需要转GBK；例如：convert(name using gbk)</p>
@@ -397,6 +389,8 @@ img {
 <li><strong>查询字段</strong> 默认不提供查询功能，必须在这里设置要查询的字段代码；多个字段用英文逗号隔开。树形展示不能查询</li>
 <li><strong>双击操作</strong> 在双击列表项或树型节点时，对当前记录做对应操作，默认是view，可以修改为edit,del或其他自定义方法</li>
 <li><strong>双击窗体样式</strong> 目前有四种：默认、只读、全屏1、全屏2;正常情况下是默认、只读是只能看不能提交、全屏1是默认的最大化版，全屏2是打开新的窗体有可能会被浏览器阻止</li>
+<li><strong>单行工具栏</strong> 默认单行工具框，查询与操作按钮放在同一行</li>
+<li><strong>请求地址</strong> 默认请求的地址为当前对像的grid方法，这里可以自定义，返回的格式为JSON：{rows:[{}],total:1}</li>
 </ul>
 <blockquote>
 <p>其它没有说明的参数一般不建义修改</p>
@@ -425,7 +419,7 @@ img {
 <p><strong>控件参数</strong>为“YHZT”用户状态的代码</p>
 <p><strong>指向对象模型</strong>必须为“tlingx_optionitem” 字典子项</p>
 <h3>树型属性</h3>
-<p>在一个系统中有许多树型结构的数据，LINGX为其定制了树型展示模版，同时对该数据表有一个要求，</p>
+<p>在一个系统中有许多树型结构的数据，为其定制了树型展示模版，同时对该数据表有一个要求，</p>
 <ul>
 <li>上级ID的字段名必须为“fid”，根节点的值为0；</li>
 <li>树型节点开关字段名state，值为open/close:打开（open）或关闭（close），可选；</li>
@@ -450,9 +444,9 @@ img {
 <li><strong>指向对象模型</strong>	该属性引用的对象模型</li>
 <li><strong>是否可用</strong>	是否在编辑界面中可用</li>
 <li><strong>是否可见</strong>	是否在列表界面中可见</li>
-<li><strong>字段同步</strong>	在修改同一对象下同名属性（对象属性和方法属性）时是否同步和被同步</li>
+<li><strong>字段同步</strong>	在修改同一对象下同名属性（对象属性和方法属性）时是否同步和被同步，默认是同步的</li>
 <li><strong>默认值</strong>	在编辑时的默认值,可以是基本数据类型:1,张三；也可以用默认值表达式${CUser.getOrgId()}、${CDate}、${CDateTime}；还可以用Request对象的参数名${paramName}</li>
-<li><strong>列表宽度</strong>	在列表展示时，该字段的显示宽度，单位px</li>
+<li><strong>列表宽度</strong>	在列表展示时，该字段的显示宽度，单位px，例如：300</li>
 <li><strong>是否转义</strong> 在指向对象模型的字段，在显示时默认会转义。比如：用户性别在数据库中值为1，在显示的时候会跟会字典的配置转化成男。</li>
 <li><strong>是否连接</strong> 默认在转义的时候是带连接可以在界面中点击查看被连接的记录信息，在这里可以关闭。比如用户性别指向是字典信息，没有其他意义可关闭。所有的字典类转义都可以关闭连接，即设置false。</li>
 <li><strong>备注</strong> 在可以这可填写备注信息</li>
@@ -492,7 +486,7 @@ img {
 <li><strong>方法名称</strong>	对外显示的名称</li>
 <li><strong>是否验证</strong>	是否启用验证，默认启用</li>
 <li><strong>当前记录</strong>	是否需要当前记录作为参数</li>
-<li><strong>映射字段</strong>	将当前记录的值，传给该字段</li>
+<li><strong>映射字段</strong>	将当前记录的引用值，传给该字段</li>
 <li><strong>右键菜单</strong>	是否把该功能加入右键菜单中</li>
 <li><strong>是否可见</strong>	是否在界面中显示</li>
 <li><strong>是否可用</strong>	是否可用与是否可见的区别是，不可用将显示灰色不可点击的按钮</li>
