@@ -312,24 +312,30 @@ img {
 <li>操作系统：Windows系列/Linux系列/MacOS 32位或64位都可以</li>
 <li>Java环境：JDK 1.8 32位或64位都可以</li>
 <li>WEB容器：Tomcat 8.0 是我的开发环境，Jetty、JBoss等也是可以的，标准Servlet 2.5工程</li>
-<li>数据库：MySQL 5.5+，我是用MariaDB 5.5</li>
+<li>数据库：MySQL 5.5、5.6、5.7，我是用MariaDB 5.5</li>
 <li>浏览器：谷歌chrome、火狐Firefox</li>
 </ul>
 <blockquote>
 <p>我的开发环境是：win7(64位)+JDK 1.8(64位)+Tomcat 8.0+MariaDB 5.5 (64位)</p>
-<p>绿色版下载地址：http://mdd.lingx.com/20210115/lingx-mdd.zip</p>
+<p>一键启动版下载：http://mdd.lingx.com/20210115/lingx-mdd.zip</p>
 </blockquote>
 <h1>数据库建表约束</h1>
 <ol>
 <li>当前只能支持MySQL数据库，支持版本 5.5、5.6、5.7 或 MariaDB 5.5</li>
 <li>每个表必须要有id字段做为主键，可以用数字(自增)或字符(UUID)</li>
 <li>时间字段不用Date类型，用char(8)、char(14)来表示日期与日期时间，例：20191115与20191115114450</li>
-<li>树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段</li>
+<li>树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段，字典代码为：SXJDKG</li>
 </ol>
 <h1>模型架构</h1>
-<blockquote>
-<p>主要有模型、属性、方法、验证器、解析器、执行器</p>
-</blockquote>
+<p>主要有模型、属性、操作、验证器、解释器、执行器</p>
+<ul>
+<li>模型：现实或概念中具体存在的事物。例如：学生、图书、订单、日志。</li>
+<li>属性：模型客观存在的特征、参数、标识。例如：学生的姓名、年龄、编号。</li>
+<li>操作：对模型的各种操作。例如：添加、修改、删除、展示。</li>
+<li>验证器：在操作时需要对各种数据的有效性验证。例如：不可为空、必须为数字、必须为邮箱。</li>
+<li>解释器：将存储在数据库中的代码转换为便于人们理解的。例如：20191115 解释为 2019-11-15</li>
+<li>执行器：执行操作时的具体描述，这里一般用JavaScript代码书写。</li>
+</ul>
 <h2>模型</h2>
 <p>为了模型与数据库的方便管理与识别，建议数据库表名称与字段全部用小写，如果有多单词可下划线“_”划分；数据库表以t开头，视图以&quot;v&quot;开头，再接上系统名称、模块名称、子模块名称。
 例如：</p>
@@ -337,24 +343,31 @@ img {
 <p>toa_work_rule_date OA系统的考勤规则中的日期规则</p>
 <p>更多资料请参考tlingx开头的表结构</p>
 <h3>表模型</h3>
-<p>表模型即为数据库表的模型模型，表字段为模型属性，字段名称为属性代码，字段注释为属性名称；默认情况下字段与属性一一映射，特殊情况下可以多个属性映射同一字段，或没有属性来映射这段。</p>
+<p>表模型即为数据库表的模型，表字段为模型属性，字段名称为属性代码，字段注释为属性名称；默认情况下字段与属性一一映射，特殊情况下可以多个属性映射同一字段，或没有属性来映射这段。</p>
 <p>在表模型生成期间会自动生成“添加、修改、删除”方法模型，来对该表数据进行增删改查。</p>
 <p>表模型在使用列表展示模型时，有附加查询功能；该查询是组合查询，在查询关联模型只需要输关联模型的名称。</p>
 <p>数据库表建议以“t”为前缀</p>
+<h4>自动创建表模型</h4>
+<p>在线自动创建模型功能、在线添加属性。提交后自动生成为表对象。</p>
+<h4>Excel模型</h4>
+<p>与自动创建表模型功能类似，在这里不需要添加属性， 系统可以自动读取表格第一行为属性值</p>
+<blockquote>
+<p>Excel文件的第一行为模型属性，第二行开始为数据；只读取Sheet1。</p>
+</blockquote>
 <h3>视图模型</h3>
-<p>视图模型即为数据库视图的模型模型，只是引用模型不同。在平台的使用方式并无二致。
+<p>视图模型即为数据库视图的模型，只是引用模型不同。在平台的使用方式并无二致，但如果为多表关联只能展示，不能操作。
 视图名称建议以“v” 为前缀。</p>
 <h3>克隆模型</h3>
 <p>克隆模型是其他模型的完全复制品，克隆模型与原模型完全独立，在使用功能上与原模型无异；主要是对同一模型具有两种业务时进行克隆。
 例如公共表附件，邮件附件与订单附件的隶属模型不一样，数据权限也不一样，所以需要克隆模型；使得在业务逻辑上是两个表，实际上是操作同一表。
 克隆模型建议模型代码以“_clone”为后缀。</p>
-<h3>模型模型详解</h3>
+<h3>模型详解</h3>
 <ul>
 <li>属性	说明</li>
-<li><strong>模型代码</strong>	唯一标识</li>
-<li><strong>模型名称</strong>	模型方便展示的标识</li>
+<li><strong>模型代码</strong>	唯一标识，一般等同于数据库表名</li>
+<li><strong>模型名称</strong>	模型方便展示的标识，一般等同数据库表备注</li>
 <li><strong>模型类型</strong>	1、表模型，2、视图模型，3、克隆模型</li>
-<li><strong>数据表名</strong>	映射到数据库的资源名称</li>
+<li><strong>数据表名</strong>	映射到数据库的资源名称，当模型代码与数据库表名不一致时，在这里填写对应的表名</li>
 <li><strong>级联模型</strong>	可以同时将有引用该模型的模型进行级联展示，最简单的一级级联方式：tlingx_user(直接填写模型代码，前提是需要被级联模型有一属性指向当前模型)</li>
 </ul>
 <blockquote>
@@ -366,6 +379,7 @@ img {
 <ul>
 <li><strong>查询条件</strong> 	模型数据筛选， 以and 开头；该字段是表达式，所以常量需要声明，例如：' and status=1'(注意有引号)</li>
 <li><strong>显示模式</strong>	列表展示或树型展示 grid/tree；目前在模型级联会用到</li>
+<li><strong>关联资源</strong>   用于远程提交时，将关联的文件资源一起提交到远程服务器；例如：lingx\main.jsp</li>
 <li><strong>模型类型</strong>   Entity 实体类型</li>
 </ul>
 <h2>配置</h2>
@@ -418,7 +432,7 @@ img {
 <p>以下是用户状态字段的引用情况：</p>
 <p><strong>输入控件</strong>为 “radio” 单选框</p>
 <p><strong>控件参数</strong>为“YHZT”用户状态的代码</p>
-<p><strong>指向模型模型</strong>必须为“tlingx_optionitem” 字典子项</p>
+<p><strong>指向模型</strong>必须为“tlingx_optionitem” 字典子项</p>
 <h3>树型属性</h3>
 <p>在一个系统中有许多树型结构的数据，为其定制了树型展示模版，同时对该数据表有一个要求，</p>
 <ul>
@@ -442,35 +456,35 @@ img {
 <li><strong>输入控件</strong>	该属性采用哪种输入控件，默认是文本框</li>
 <li><strong>控件参数</strong>	部分控件支持参数设置</li>
 <li><strong>引用类型</strong>	该属性在被引用时所扮演的角色，是显示、值、无关；默认情况下显示与值都是id</li>
-<li><strong>指向模型模型</strong>	该属性引用的模型模型</li>
+<li><strong>指向实体模型</strong>	该属性引用的模型</li>
 <li><strong>是否可用</strong>	是否在编辑界面中可用</li>
 <li><strong>是否可见</strong>	是否在列表界面中可见</li>
 <li><strong>字段同步</strong>	在修改同一模型下同名属性（模型属性和方法属性）时是否同步和被同步，默认是同步的</li>
 <li><strong>默认值</strong>	在编辑时的默认值,可以是基本数据类型:1,张三；也可以用默认值表达式${CUser.getOrgId()}、${CDate}、${CDateTime}；还可以用Request模型的参数名${paramName}</li>
 <li><strong>列表宽度</strong>	在列表展示时，该字段的显示宽度，单位px，例如：300</li>
-<li><strong>是否转义</strong> 在指向模型模型的字段，在显示时默认会转义。比如：用户性别在数据库中值为1，在显示的时候会跟会字典的配置转化成男。</li>
+<li><strong>是否转义</strong> 在指向模型的字段，在显示时默认会转义。比如：用户性别在数据库中值为1，在显示的时候会跟会字典的配置转化成男。</li>
 <li><strong>是否连接</strong> 默认在转义的时候是带连接可以在界面中点击查看被连接的记录信息，在这里可以关闭。比如用户性别指向是字典信息，没有其他意义可关闭。所有的字典类转义都可以关闭连接，即设置false。</li>
 <li><strong>备注</strong> 在可以这可填写备注信息</li>
 </ul>
-<h2>方法</h2>
+<h2>操作</h2>
 <p>方法模型代表着一个事件处理；例如：用户列表查询、添加用户、JSP界面跳转；描述事件的处理方式。</p>
 <p>方法模型有两个子模型属性和执行器。</p>
-<h3>【类型】JSON方法</h3>
+<h3>【类型】JSON操作</h3>
 <p>在一个REQUEST请求处理完成后返回JSON格式数据。大部分方法是JSON方法。</p>
 <p>当JSON没有方法属性时，直接后台执行该方法。</p>
-<h3>【类型】JSP方法</h3>
+<h3>【类型】JSP操作</h3>
 <p>在一个REQUEST请求处理完在后返回JSP界面，通常在自定义开发中会用到。</p>
-<h3>【类型】URL方法</h3>
-<p>该方法重定向到设置的URL。如下图重定向到百度</p>
-<h3>【类型】JavaScript方法</h3>
+<h3>【类型】URL操作</h3>
+<p>系统会跳转到执行器的结果UR。</p>
+<h3>【类型】JavaScript操作</h3>
 <p>在一个REQUEST请求处理完成后，返回JavaScript，并执行。</p>
-<h3>默认生成方法</h3>
+<h3>默认生成操作</h3>
 <ul>
 <li>模型添加add</li>
 <li>模型修改edit</li>
 <li>模型删除del</li>
 </ul>
-<h3>默认实现方法</h3>
+<h3>默认实现操作</h3>
 <ul>
 <li>模型展示view</li>
 <li>模型列表grid(包含对话框列表<strong>单选</strong>)</li>
@@ -478,22 +492,26 @@ img {
 <li>模型选择combo</li>
 <li>对话框列表<strong>多选</strong>combogrid2</li>
 <li>对话框树型<strong>多选</strong>combotree2</li>
+<li>数据导入import</li>
 <li>数据导出excel</li>
 <li>高级查询search</li>
 </ul>
-<h3>方法模型详解</h3>
+<h3>操作模型详解</h3>
 <ul>
-<li><strong>方法代码</strong>	该方法调用的唯一标识</li>
-<li><strong>方法名称</strong>	对外显示的名称</li>
+<li><strong>操作代码</strong>	该方法调用的唯一标识</li>
+<li><strong>操作名称</strong>	对外显示的名称</li>
 <li><strong>是否验证</strong>	是否启用验证，默认启用</li>
 <li><strong>当前记录</strong>	是否需要当前记录作为参数</li>
 <li><strong>映射字段</strong>	将当前记录的引用值，传给该字段</li>
 <li><strong>右键菜单</strong>	是否把该功能加入右键菜单中</li>
 <li><strong>是否可见</strong>	是否在界面中显示</li>
 <li><strong>是否可用</strong>	是否可用与是否可见的区别是，不可用将显示灰色不可点击的按钮</li>
+<li><strong>窗体样式</strong>   有四种默认、只读、全屏1、全屏2</li>
 <li><strong>返回类型</strong>	返回类型json,jsp,javascript,url对应以上的四种方法</li>
 <li><strong>提示消息</strong>	在编辑框头部的消息提示</li>
 <li><strong>操作确认消息</strong>	在点“确定”按钮是弹出来的提示消息</li>
+<li><strong>自定义界面</strong> 打开窗体时，指向的界面。例如：默认的lingx/template/edit.jsp</li>
+<li><strong>请求地址</strong> 当该操作需要特殊操作，需要将数据提交到其他URI时填写</li>
 <li><strong>扩展参数</strong>	是JSON模型，目前有属性height设置编辑框的高度，例如:{&quot;height&quot;:600}</li>
 <li><strong>前置脚本</strong>   在这里可以写启用该方法的条件，条件不足时。界面提示【前置消息】。需要时也可以在这里业务逻辑，相当于前置拦截器。</li>
 <li><strong>前置消息</strong>   在前置脚本结果为flase时，界面上展示该值。详见用户管理的重置密码。</li>
@@ -708,31 +726,6 @@ ret;
 <blockquote>
 <p>在要进行下面操作时，需要在菜单“平台管理”-“模型管理”，在列表找到“用户管理”、“组织管理”；将其状态变更为“开发”。再退出重新登录</p>
 </blockquote>
-<h2>列表模版</h2>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614211955.png" /></p>
-<blockquote>
-<p>用户管理-预览</p>
-</blockquote>
-<h2>树形模版</h2>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212300.png" /></p>
-<blockquote>
-<p>组织管理-预览</p>
-</blockquote>
-<h2>列表级联</h2>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212532.png" /></p>
-<blockquote>
-<p>系统管理-用户管理</p>
-</blockquote>
-<h2>树形级联</h2>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212712.png" /></p>
-<blockquote>
-<p>系统管理-角色管理</p>
-</blockquote>
-<h2>多重级联</h2>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614212752.png" /></p>
-<blockquote>
-<p>系统管理-组织管理</p>
-</blockquote>
 <h1>表单控件</h1>
 <p>基于EXTJS构建的表单数据输入控件，在非EXTJS构建的表单。不能直接使用以下控件，但可以变通使用</p>
 <blockquote>
@@ -750,25 +743,25 @@ ret;
 <p><em>模型选择设置方法</em></p>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;选择控件&quot;</li>
-<li><strong>指向模型模型</strong>设置为被选模型</li>
+<li><strong>指向模型</strong>设置为被选模型</li>
 </ul>
 <p><em>字典选择设置方法</em></p>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;选择控件&quot;</li>
 <li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
-<li><strong>指向模型模型</strong>设置为“字典子项” 列表中的最后一个</li>
+<li><strong>指向模型</strong>设置为“字典子项” 列表中的最后一个</li>
 </ul>
 <h2>单选</h2>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;单选框&quot;</li>
 <li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
-<li><strong>指向模型模型</strong>设置为“字典子项” 列表中的最后一个</li>
+<li><strong>指向模型</strong>设置为“字典子项” 列表中的最后一个</li>
 </ul>
 <h2>多选</h2>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;多选框&quot;</li>
 <li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
-<li><strong>指向模型模型</strong>设置为“字典子项” 列表中的最后一个</li>
+<li><strong>指向模型</strong>设置为“字典子项” 列表中的最后一个</li>
 </ul>
 <h2>数字</h2>
 <p>数字输入框</p>
@@ -823,115 +816,6 @@ ret;
 <h3>角色授权</h3>
 <h3>菜单授权</h3>
 <h3>功能授权</h3>
-<h1>工作流程</h1>
-<h2>流程元素</h2>
-<h3>开始节点</h3>
-<h3>结束节点</h3>
-<h3>手动任务</h3>
-<h3>自动任务</h3>
-<h3>会签任务</h3>
-<h3>子流程任务</h3>
-<h3>前进线</h3>
-<h3>后退线</h3>
-<h2>表单控件</h2>
-<h3>表格 table</h3>
-<h3>列表 list</h3>
-<h3>单行文本框 text</h3>
-<h3>多行文本框 textarea</h3>
-<h3>选择项 select</h3>
-<p>选项加载方式有两种。</p>
-<p>1、静态：在表单设计器中，直接给select添加option子项</p>
-<p>2、动态：在表单设计器中，设置【指向模型模型】在表单中可以直接动态调取该模型的combo方法，注意授权</p>
-<p>同样也可以引用字典，设置【指向模型模型】为【选项子项】，在扩展参数中填入字典代码。</p>
-<h3>签章 image</h3>
-<h3>用户单选</h3>
-<h3>用户多选</h3>
-<h3>组织单选</h3>
-<h3>组织多选</h3>
-<h3>外部链接</h3>
-<p>iframe内嵌URL，固定在URL加入参数instance_id，流程实例ID</p>
-<h3>列表控件</h3>
-<p>列表数据控件，原本“外部链接”就可以支持列表控件（通过iframe内嵌模型的gird方法），目前列表的内部控件只支持文件框；开发本控件是为了结合手机端流程的列表数据统一管理。
-主要设置“扩展参数”，例如：{&quot;name&quot;:&quot;list1&quot;,&quot;field&quot;:[&quot;姓名&quot;,&quot;性别&quot;,&quot;年龄&quot;,&quot;联系电话&quot;]}
-实际存储与调用的参数名为：list<em>list1。需要加前缀&quot;list</em>&quot;</p>
-<h3>附件上传</h3>
-<p>单个附件上传，需要在扩展参数中填写：{&quot;name&quot;:&quot;file1&quot;}</p>
-<h3>日期 yyyy-MM-dd</h3>
-<h3>日期时间 yyyy-MM-dd HH:mm</h3>
-<h3>提示框</h3>
-<h3>内容Well</h3>
-<h3>红色标志</h3>
-<h3>环境变量</h3>
-<h2>在线表单设计</h2>
-<h2>在线流程设计</h2>
-<h1>数据库规则</h1>
-<ul>
-<li>目前只支持MYSQL5.5/5.6</li>
-<li>主键名字必须为id,类型可以为自增或UUID</li>
-<li>日期/时间类型必须用字符来表示，日期时间建议设置为char(14)，例：20150217152536；日期设置为char(8)，例：20150217</li>
-<li>树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段</li>
-</ul>
-<h1>开发环境</h1>
-<h2>本地集在开发环境-Eclipse</h2>
-<h3>创建Web项目</h3>
-<h3>下载并导入相关jar</h3>
-<h3>安装数据库</h3>
-<h3>配置数据库</h3>
-<h2>在线集在开发环境-WEB</h2>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925145207.png" /></p>
-<h3>工具栏区</h3>
-<p>在上图的页面头部区域是工具栏区</p>
-<h4>创建模型</h4>
-<ul>
-<li>创建数据表模型</li>
-<li>创建数据视图模型</li>
-<li>创建查询模型</li>
-<li>创建克隆模型</li>
-</ul>
-<h4>规则编辑</h4>
-<blockquote>
-<p>权限管理-横向数据权限</p>
-</blockquote>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925164746.png" /></p>
-<p>左右两边都是数据权限元数据，中间是逻辑运算符；可以进行条件分组。条件分组之间也可以进行逻辑运算</p>
-<h4>纵向权限</h4>
-<blockquote>
-<p>权限管理-纵向数据权限</p>
-</blockquote>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925165353.png" /></p>
-<p>根据角色来指定模型对该角色的不可见字段，如果用户有多个角色；字段可见是或关系。</p>
-<h4>模型预览</h4>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925170812.png" /></p>
-<p>在线开发的功能可直接预览，所见即所得。</p>
-<h4>写入功能树</h4>
-<p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925171056.png" /></p>
-<p>只有打勾的功能点才能进行授权与操作。</p>
-<h4>插件管理</h4>
-<p>功能插件的启用、禁用操作；插件参数的设置与修改</p>
-<h4>参数设置</h4>
-<p>系统全局参数的设置与修改。可直接刷新内存中的缓存数据，立即生效。</p>
-<p>通过LINGX或ILingxService的getContfigValue()来获取。</p>
-<h3>模型区</h3>
-<p>在集成开发环境的页面左部区域是模型列表区，简称模型区</p>
-<h3>工作区</h3>
-<p>在集成开发环境的页面中部区域是工作区</p>
-<h4>添加属性</h4>
-<h4>添加方法</h4>
-<h4>添加验证器</h4>
-<h4>添加解释器</h4>
-<h4>添加执行器</h4>
-<h4>复制</h4>
-<h4>粘贴</h4>
-<h4>删除</h4>
-<h3>属性区</h3>
-<p>在集成开发环境的页面右部区域是属性区</p>
-<p>模型、属性、方法、验证器、解释器、执行器等，都有自己的属性。这里是相应的属性设置区</p>
-<h3>代码编辑区</h3>
-<p>在集成开发环境的页面底部区域是代码编辑区</p>
-<h4>编辑框</h4>
-<p>代码编辑框</p>
-<h4>API</h4>
-<p>执行器内置模型的简易说明</p>
 <h1>API</h1>
 <h2>转义表达式</h2>
 <p>使用场景
@@ -1096,7 +980,7 @@ public IHttpRequest getRequest();
  */
 public Map&lt;String,Object&gt; getSession();
 /**
- * 设置当前模型模型
+ * 设置当前模型
  * @param entity
  */
 public void setEntity(IEntity entity);
@@ -1106,7 +990,7 @@ public void setEntity(IEntity entity);
  */
 public void setMethod(IMethod method);
 /**
- * 取出当前模型模型
+ * 取出当前模型
  * @return
  */
 public IEntity getEntity();
@@ -1290,7 +1174,7 @@ public IHttpRequest getRequest();
  */
 public Map&lt;String,Object&gt; getSession();
 /**
- * 设置当前模型模型
+ * 设置当前模型
  * @param entity
  */
 public void setEntity(IEntity entity);
@@ -1300,7 +1184,7 @@ public void setEntity(IEntity entity);
  */
 public void setMethod(IMethod method);
 /**
- * 取出当前模型模型
+ * 取出当前模型
  * @return
  */
 public IEntity getEntity();
@@ -1552,12 +1436,6 @@ public Map&lt;String, Object&gt; execute(Map&lt;String, Object&gt; params) {
 }
 </code></pre>
 
-<h3>IPlugin接口的execute方法</h3>
-<h3>AOP切面编程</h3>
-<h3>工作调度@Scheduled</h3>
-<h1>在线更新</h1>
-<h2>在线打包</h2>
-<h2>在线部署</h2>
 <p></article>
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="javascripts/jquery.ztree.core-3.5.min.js"></script>
@@ -1570,7 +1448,7 @@ is_highlight_selected_line:false,
 documment_selector:'.markdown-body', 
 ztreeStyle: { width:'260px', overflow: 'auto', position: 'fixed', 'z-index': 2147483647, border: '0px none', left: '0px', top: '0px' } 
 });
-$("title").text("LINGX模型驱动开发平台-抛开编码细节、专注业务逻辑");
+$("title").text("灵犀 - 开源的轻量级模型驱动在线开发系统");
 $("body").css("margin","0px");
 $("body").css("margin-left","320px");
  });
