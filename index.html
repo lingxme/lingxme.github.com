@@ -293,16 +293,16 @@ img {
 <body>
 <ul id="tree" class="ztree" style=""></ul>
 <p><article class='markdown-body'></p>
-<h1>LINGX技术文档</h1>
+<h1>灵犀 - 开源的轻量级模型驱动在线开发系统</h1>
 <h2>目标</h2>
 <blockquote>
 <p>简化信息管理软件开发；抛开编码细节、专注业务逻辑。</p>
 </blockquote>
 <h2>第三方引用</h2>
 <ul>
-<li>Spring 3.2：主要应用IOC、AOP、事件、JDBC、事务管理、定时调度</li>
-<li>druid 1.0：数据库连接池</li>
-<li>fastjson 1.1：JSON格式化工具</li>
+<li>Spring 3.2.13：主要应用IOC、AOP、事件、JDBC、事务管理、定时调度</li>
+<li>druid 1.2.4：数据库连接池</li>
+<li>fastjson 1.1.46：JSON格式化工具</li>
 <li>log4j 2.3：日志工具</li>
 <li>guava 18.0：内部缓存</li>
 <li>ExtJS 4.2：前端展示</li>
@@ -317,44 +317,45 @@ img {
 </ul>
 <blockquote>
 <p>我的开发环境是：win7(64位)+JDK 1.8(64位)+Tomcat 8.0+MariaDB 5.5 (64位)</p>
+<p>绿色版下载地址：http://mdd.lingx.com/20210115/lingx-mdd.zip</p>
 </blockquote>
 <h1>数据库建表约束</h1>
 <ol>
-<li>当前只能支持MySQL数据库，支持版本 5.5、5.6、5.7</li>
+<li>当前只能支持MySQL数据库，支持版本 5.5、5.6、5.7 或 MariaDB 5.5</li>
 <li>每个表必须要有id字段做为主键，可以用数字(自增)或字符(UUID)</li>
 <li>时间字段不用Date类型，用char(8)、char(14)来表示日期与日期时间，例：20191115与20191115114450</li>
 <li>树型数据结构表，上级字段名必须用fid，有支持icon_cls（图标样式）,state（展开open、关闭close）字段</li>
 </ol>
 <h1>模型架构</h1>
 <blockquote>
-<p>模型有对象、属性、方法、验证器、解析器、执行器</p>
+<p>主要有模型、属性、方法、验证器、解析器、执行器</p>
 </blockquote>
-<h2>对象</h2>
-<p>为了对象与数据库的方便管理与识别，建议数据库表名称与字段全部用小写，如果有多单词可下划线“_”划分；数据库表以t开头，视图以&quot;v&quot;开头，再接上系统名称、模块名称、子模块名称。
+<h2>模型</h2>
+<p>为了模型与数据库的方便管理与识别，建议数据库表名称与字段全部用小写，如果有多单词可下划线“_”划分；数据库表以t开头，视图以&quot;v&quot;开头，再接上系统名称、模块名称、子模块名称。
 例如：</p>
 <p>toa_work_rule OA系统的考勤规则</p>
 <p>toa_work_rule_date OA系统的考勤规则中的日期规则</p>
 <p>更多资料请参考tlingx开头的表结构</p>
-<h3>表对象</h3>
-<p>表对象即为数据库表的对象模型，表字段为对象属性，字段名称为属性代码，字段注释为属性名称；默认情况下字段与属性一一映射，特殊情况下可以多个属性映射同一字段，或没有属性来映射这段。</p>
-<p>在表对象生成期间会自动生成“添加、修改、删除”方法模型，来对该表数据进行增删改查。</p>
-<p>表对象在使用列表展示模型时，有附加查询功能；该查询是组合查询，在查询关联对象只需要输关联对象的名称。</p>
+<h3>表模型</h3>
+<p>表模型即为数据库表的模型模型，表字段为模型属性，字段名称为属性代码，字段注释为属性名称；默认情况下字段与属性一一映射，特殊情况下可以多个属性映射同一字段，或没有属性来映射这段。</p>
+<p>在表模型生成期间会自动生成“添加、修改、删除”方法模型，来对该表数据进行增删改查。</p>
+<p>表模型在使用列表展示模型时，有附加查询功能；该查询是组合查询，在查询关联模型只需要输关联模型的名称。</p>
 <p>数据库表建议以“t”为前缀</p>
-<h3>视图对象</h3>
-<p>视图对象即为数据库视图的对象模型，只是引用对象不同。在平台的使用方式并无二致。
+<h3>视图模型</h3>
+<p>视图模型即为数据库视图的模型模型，只是引用模型不同。在平台的使用方式并无二致。
 视图名称建议以“v” 为前缀。</p>
-<h3>克隆对象</h3>
-<p>克隆对象是其他对象的完全复制品，克隆对象与原对象完全独立，在使用功能上与原对象无异；主要是对同一模型具有两种业务时进行克隆。
-例如公共表附件，邮件附件与订单附件的隶属对象不一样，数据权限也不一样，所以需要克隆对象；使得在业务逻辑上是两个表，实际上是操作同一表。
-克隆对象建议对象代码以“_clone”为后缀。</p>
-<h3>对象模型详解</h3>
+<h3>克隆模型</h3>
+<p>克隆模型是其他模型的完全复制品，克隆模型与原模型完全独立，在使用功能上与原模型无异；主要是对同一模型具有两种业务时进行克隆。
+例如公共表附件，邮件附件与订单附件的隶属模型不一样，数据权限也不一样，所以需要克隆模型；使得在业务逻辑上是两个表，实际上是操作同一表。
+克隆模型建议模型代码以“_clone”为后缀。</p>
+<h3>模型模型详解</h3>
 <ul>
 <li>属性	说明</li>
-<li><strong>对象代码</strong>	唯一标识</li>
-<li><strong>对象名称</strong>	对象方便展示的标识</li>
-<li><strong>对象类型</strong>	1、表对象，2、视图对象，3、克隆对象</li>
+<li><strong>模型代码</strong>	唯一标识</li>
+<li><strong>模型名称</strong>	模型方便展示的标识</li>
+<li><strong>模型类型</strong>	1、表模型，2、视图模型，3、克隆模型</li>
 <li><strong>数据表名</strong>	映射到数据库的资源名称</li>
-<li><strong>级联对象</strong>	可以同时将有引用该对象的对象进行级联展示，最简单的一级级联方式：tlingx_user(直接填写对象代码，前提是需要被级联对象有一属性指向当前对象)</li>
+<li><strong>级联模型</strong>	可以同时将有引用该模型的模型进行级联展示，最简单的一级级联方式：tlingx_user(直接填写模型代码，前提是需要被级联模型有一属性指向当前模型)</li>
 </ul>
 <blockquote>
 <p>一级级联 <code>[{name:'隶属分组',entity:'tgps_cargroup_car',method:'grid',rule:'',where:{}}]</code></p>
@@ -363,8 +364,8 @@ img {
 <p>where是附加条件，值为JSON数据，例如:where:{&quot;status&quot;:&quot;1&quot;}</p>
 </blockquote>
 <ul>
-<li><strong>查询条件</strong> 	对象数据筛选， 以and 开头；该字段是表达式，所以常量需要声明，例如：' and status=1'(注意有引号)</li>
-<li><strong>显示模式</strong>	列表展示或树型展示 grid/tree；目前在对象级联会用到</li>
+<li><strong>查询条件</strong> 	模型数据筛选， 以and 开头；该字段是表达式，所以常量需要声明，例如：' and status=1'(注意有引号)</li>
+<li><strong>显示模式</strong>	列表展示或树型展示 grid/tree；目前在模型级联会用到</li>
 <li><strong>模型类型</strong>   Entity 实体类型</li>
 </ul>
 <h2>配置</h2>
@@ -374,7 +375,7 @@ img {
 <li><strong>序号</strong>	是否在列表显示中显示记录的序号从1开始；在树型结构数据中无效；默认开启</li>
 <li><strong>页码</strong>	默认显示的页码，默认为1</li>
 <li><strong>行数</strong>	每页显示的记录数，默认为20</li>
-<li><strong>排序字段</strong> 可以是当前对象的任意字段代码，默认为id</li>
+<li><strong>排序字段</strong> 可以是当前模型的任意字段代码，默认为id</li>
 <li><strong>排序方式</strong> 升序asc,降序desc；默认是desc</li>
 <li>
 <p><strong>查询字段</strong>	在列表展示的右上角有一“查询”按钮，默认是可以用所有条件进行查询。该配置是指定哪些字段可进行查询，多字段用英文逗号隔开;例如：name,status，也可以用自定义查询，例如：</p>
@@ -406,10 +407,10 @@ img {
 <p>一般属性可以添加解释器，对数据的展示进行格式转换。例如：日期的格式转换</p>
 <h3>日期属性</h3>
 <p>为了方便日期时间数据的存储和管理，在数据库中日期的数据格式为char(8)，日期时间的数据格式为char(14)，需添加日期解释器</p>
-<h3>对象属性</h3>
-<p>对象属性是为表与表之间关联关系设计的属性</p>
-<p>对象属性不可以使用解释器，平台会自动根据其引用情况自动对焦。</p>
-<p>对象属性的输入控件有，单选、多选、列表、对话框列表选择、对话框树型选择</p>
+<h3>模型属性</h3>
+<p>模型属性是为表与表之间关联关系设计的属性</p>
+<p>模型属性不可以使用解释器，平台会自动根据其引用情况自动对焦。</p>
+<p>模型属性的输入控件有，单选、多选、列表、对话框列表选择、对话框树型选择</p>
 <h3>字典属性</h3>
 <p>在业务开发的过程中经常需要处理些像性别、状态。需要事先设定可选值；在LINGX中统一把这类型属性，叫字典属性。</p>
 <p>字典属性不可以使用解释器，平台会自动根据其引用情况自动对焦。</p>
@@ -417,13 +418,13 @@ img {
 <p>以下是用户状态字段的引用情况：</p>
 <p><strong>输入控件</strong>为 “radio” 单选框</p>
 <p><strong>控件参数</strong>为“YHZT”用户状态的代码</p>
-<p><strong>指向对象模型</strong>必须为“tlingx_optionitem” 字典子项</p>
+<p><strong>指向模型模型</strong>必须为“tlingx_optionitem” 字典子项</p>
 <h3>树型属性</h3>
 <p>在一个系统中有许多树型结构的数据，为其定制了树型展示模版，同时对该数据表有一个要求，</p>
 <ul>
 <li>上级ID的字段名必须为“fid”，根节点的值为0；</li>
 <li>树型节点开关字段名state，值为open/close:打开（open）或关闭（close），可选；</li>
-<li>节点的图标样式icon_cls，可以在数据库表字段中指定样式图标，可选。<strong>详见tlingx_org对象</strong></li>
+<li>节点的图标样式icon_cls，可以在数据库表字段中指定样式图标，可选。<strong>详见tlingx_org模型</strong></li>
 </ul>
 <h4>fid 与本表的ID类型一至</h4>
 <p>根节点的fid必须为0</p>
@@ -441,13 +442,13 @@ img {
 <li><strong>输入控件</strong>	该属性采用哪种输入控件，默认是文本框</li>
 <li><strong>控件参数</strong>	部分控件支持参数设置</li>
 <li><strong>引用类型</strong>	该属性在被引用时所扮演的角色，是显示、值、无关；默认情况下显示与值都是id</li>
-<li><strong>指向对象模型</strong>	该属性引用的对象模型</li>
+<li><strong>指向模型模型</strong>	该属性引用的模型模型</li>
 <li><strong>是否可用</strong>	是否在编辑界面中可用</li>
 <li><strong>是否可见</strong>	是否在列表界面中可见</li>
-<li><strong>字段同步</strong>	在修改同一对象下同名属性（对象属性和方法属性）时是否同步和被同步，默认是同步的</li>
-<li><strong>默认值</strong>	在编辑时的默认值,可以是基本数据类型:1,张三；也可以用默认值表达式${CUser.getOrgId()}、${CDate}、${CDateTime}；还可以用Request对象的参数名${paramName}</li>
+<li><strong>字段同步</strong>	在修改同一模型下同名属性（模型属性和方法属性）时是否同步和被同步，默认是同步的</li>
+<li><strong>默认值</strong>	在编辑时的默认值,可以是基本数据类型:1,张三；也可以用默认值表达式${CUser.getOrgId()}、${CDate}、${CDateTime}；还可以用Request模型的参数名${paramName}</li>
 <li><strong>列表宽度</strong>	在列表展示时，该字段的显示宽度，单位px，例如：300</li>
-<li><strong>是否转义</strong> 在指向对象模型的字段，在显示时默认会转义。比如：用户性别在数据库中值为1，在显示的时候会跟会字典的配置转化成男。</li>
+<li><strong>是否转义</strong> 在指向模型模型的字段，在显示时默认会转义。比如：用户性别在数据库中值为1，在显示的时候会跟会字典的配置转化成男。</li>
 <li><strong>是否连接</strong> 默认在转义的时候是带连接可以在界面中点击查看被连接的记录信息，在这里可以关闭。比如用户性别指向是字典信息，没有其他意义可关闭。所有的字典类转义都可以关闭连接，即设置false。</li>
 <li><strong>备注</strong> 在可以这可填写备注信息</li>
 </ul>
@@ -465,16 +466,16 @@ img {
 <p>在一个REQUEST请求处理完成后，返回JavaScript，并执行。</p>
 <h3>默认生成方法</h3>
 <ul>
-<li>对象添加add</li>
-<li>对象修改edit</li>
-<li>对象删除del</li>
+<li>模型添加add</li>
+<li>模型修改edit</li>
+<li>模型删除del</li>
 </ul>
 <h3>默认实现方法</h3>
 <ul>
-<li>对象展示view</li>
-<li>对象列表grid(包含对话框列表<strong>单选</strong>)</li>
-<li>对象树型tree(包含对话框树型<strong>单选</strong>)</li>
-<li>对象选择combo</li>
+<li>模型展示view</li>
+<li>模型列表grid(包含对话框列表<strong>单选</strong>)</li>
+<li>模型树型tree(包含对话框树型<strong>单选</strong>)</li>
+<li>模型选择combo</li>
 <li>对话框列表<strong>多选</strong>combogrid2</li>
 <li>对话框树型<strong>多选</strong>combotree2</li>
 <li>数据导出excel</li>
@@ -493,7 +494,7 @@ img {
 <li><strong>返回类型</strong>	返回类型json,jsp,javascript,url对应以上的四种方法</li>
 <li><strong>提示消息</strong>	在编辑框头部的消息提示</li>
 <li><strong>操作确认消息</strong>	在点“确定”按钮是弹出来的提示消息</li>
-<li><strong>扩展参数</strong>	是JSON对象，目前有属性height设置编辑框的高度，例如:{&quot;height&quot;:600}</li>
+<li><strong>扩展参数</strong>	是JSON模型，目前有属性height设置编辑框的高度，例如:{&quot;height&quot;:600}</li>
 <li><strong>前置脚本</strong>   在这里可以写启用该方法的条件，条件不足时。界面提示【前置消息】。需要时也可以在这里业务逻辑，相当于前置拦截器。</li>
 <li><strong>前置消息</strong>   在前置脚本结果为flase时，界面上展示该值。详见用户管理的重置密码。</li>
 <li><strong>备注</strong>	在这里填写备注信息</li>
@@ -502,7 +503,7 @@ img {
 <h2>验证器</h2>
 <p>验证器模型是在数据表单提交时，进行数据是否合格的检查；不合格将不作处理。属于属性模型的子模型。</p>
 <p>如需指定返回提示消息,就修改返回消息的内容</p>
-<p><strong>验证器需要手工添加在方法内部的属性模型中，在对象的属性模型设置验证器是不启作用的</strong></p>
+<p><strong>验证器需要手工添加在方法内部的属性模型中，在模型的属性模型设置验证器是不启作用的</strong></p>
 <h3>表达式验证器</h3>
 <p>默认验证器，需要在表达式写javascript代码</p>
 <pre><code>name.length&gt;=2
@@ -633,7 +634,7 @@ public Object output(Object value, IContext context, IPerformer jsper)
 '操作成功';
 </code></pre>
 
-<p>JDBC是内置的API对象，可以进入与数据库的任务交互；JDBC等于Spring的JdbcTemplate具体使用方法请百度查询。</p>
+<p>JDBC是内置的API模型，可以进入与数据库的任务交互；JDBC等于Spring的JdbcTemplate具体使用方法请百度查询。</p>
 <p>除了JDBC之外，还内置了</p>
 <ul>
 <li>CUser 当前用户，看后面章节的当前用户类介绍</li>
@@ -705,7 +706,7 @@ ret;
 <h1>视图模版</h1>
 <p>在一般业务数据只有两种数据结构，一种是列表结构，另一种则是树型结构。</p>
 <blockquote>
-<p>在要进行下面操作时，需要在菜单“平台管理”-“对象管理”，在列表找到“用户管理”、“组织管理”；将其状态变更为“开发”。再退出重新登录</p>
+<p>在要进行下面操作时，需要在菜单“平台管理”-“模型管理”，在列表找到“用户管理”、“组织管理”；将其状态变更为“开发”。再退出重新登录</p>
 </blockquote>
 <h2>列表模版</h2>
 <p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720160614211955.png" /></p>
@@ -735,7 +736,7 @@ ret;
 <h1>表单控件</h1>
 <p>基于EXTJS构建的表单数据输入控件，在非EXTJS构建的表单。不能直接使用以下控件，但可以变通使用</p>
 <blockquote>
-<p>在设置对象或方法中任意一个属性时，会<strong>自动同步</strong>给其他同代码的字段。如不需同步，则设置属性中的<strong>字段同步</strong>为false</p>
+<p>在设置模型或方法中任意一个属性时，会<strong>自动同步</strong>给其他同代码的字段。如不需同步，则设置属性中的<strong>字段同步</strong>为false</p>
 </blockquote>
 <h2>文本</h2>
 <h3>单行文本</h3>
@@ -745,41 +746,41 @@ ret;
 <h2>密码</h2>
 <p>普通的密码文本输入框</p>
 <h2>选择</h2>
-<p>选择控件是一个改造后的combobox,支持任意对象的数据选择，显示与值可以在对象属性中配置；也可以选择字典</p>
-<p><em>对象选择设置方法</em></p>
+<p>选择控件是一个改造后的combobox,支持任意模型的数据选择，显示与值可以在模型属性中配置；也可以选择字典</p>
+<p><em>模型选择设置方法</em></p>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;选择控件&quot;</li>
-<li><strong>指向对象模型</strong>设置为被选对象</li>
+<li><strong>指向模型模型</strong>设置为被选模型</li>
 </ul>
 <p><em>字典选择设置方法</em></p>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;选择控件&quot;</li>
 <li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
-<li><strong>指向对象模型</strong>设置为“字典子项” 列表中的最后一个</li>
+<li><strong>指向模型模型</strong>设置为“字典子项” 列表中的最后一个</li>
 </ul>
 <h2>单选</h2>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;单选框&quot;</li>
 <li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
-<li><strong>指向对象模型</strong>设置为“字典子项” 列表中的最后一个</li>
+<li><strong>指向模型模型</strong>设置为“字典子项” 列表中的最后一个</li>
 </ul>
 <h2>多选</h2>
 <ul>
 <li><strong>输入控件</strong>设置为&quot;多选框&quot;</li>
 <li><strong>控件参数</strong>设置为字典代码，例如：SF。</li>
-<li><strong>指向对象模型</strong>设置为“字典子项” 列表中的最后一个</li>
+<li><strong>指向模型模型</strong>设置为“字典子项” 列表中的最后一个</li>
 </ul>
 <h2>数字</h2>
 <p>数字输入框</p>
 <h2>日期</h2>
 <p>日期在数据库存储格式为20160614，在显示或编辑中显示为2016-06-14；所以需要添加解释器（日期8,8是指字符长度）</p>
 <blockquote>
-<p>对象属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制</p>
+<p>模型属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制</p>
 </blockquote>
 <h2>日期时间</h2>
 <p>日期在数据库存储格式为20160614220625，在显示或编辑中显示为2016-06-14 22:06:25；所以需要添加解释器（日期14,14是指字符长度）</p>
 <blockquote>
-<p>对象属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制</p>
+<p>模型属性是用于列表展示与查看，方法属性才是编辑用的，所以添加解释器时必须分别添加或复制</p>
 </blockquote>
 <h2>只读</h2>
 <p>如果某字段不允许修改，则可以设置为只读</p>
@@ -840,8 +841,8 @@ ret;
 <h3>选择项 select</h3>
 <p>选项加载方式有两种。</p>
 <p>1、静态：在表单设计器中，直接给select添加option子项</p>
-<p>2、动态：在表单设计器中，设置【指向对象模型】在表单中可以直接动态调取该对象的combo方法，注意授权</p>
-<p>同样也可以引用字典，设置【指向对象模型】为【选项子项】，在扩展参数中填入字典代码。</p>
+<p>2、动态：在表单设计器中，设置【指向模型模型】在表单中可以直接动态调取该模型的combo方法，注意授权</p>
+<p>同样也可以引用字典，设置【指向模型模型】为【选项子项】，在扩展参数中填入字典代码。</p>
 <h3>签章 image</h3>
 <h3>用户单选</h3>
 <h3>用户多选</h3>
@@ -850,7 +851,7 @@ ret;
 <h3>外部链接</h3>
 <p>iframe内嵌URL，固定在URL加入参数instance_id，流程实例ID</p>
 <h3>列表控件</h3>
-<p>列表数据控件，原本“外部链接”就可以支持列表控件（通过iframe内嵌对象的gird方法），目前列表的内部控件只支持文件框；开发本控件是为了结合手机端流程的列表数据统一管理。
+<p>列表数据控件，原本“外部链接”就可以支持列表控件（通过iframe内嵌模型的gird方法），目前列表的内部控件只支持文件框；开发本控件是为了结合手机端流程的列表数据统一管理。
 主要设置“扩展参数”，例如：{&quot;name&quot;:&quot;list1&quot;,&quot;field&quot;:[&quot;姓名&quot;,&quot;性别&quot;,&quot;年龄&quot;,&quot;联系电话&quot;]}
 实际存储与调用的参数名为：list<em>list1。需要加前缀&quot;list</em>&quot;</p>
 <h3>附件上传</h3>
@@ -880,12 +881,12 @@ ret;
 <p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925145207.png" /></p>
 <h3>工具栏区</h3>
 <p>在上图的页面头部区域是工具栏区</p>
-<h4>创建对象</h4>
+<h4>创建模型</h4>
 <ul>
-<li>创建数据表对象</li>
-<li>创建数据视图对象</li>
-<li>创建查询对象</li>
-<li>创建克隆对象</li>
+<li>创建数据表模型</li>
+<li>创建数据视图模型</li>
+<li>创建查询模型</li>
+<li>创建克隆模型</li>
 </ul>
 <h4>规则编辑</h4>
 <blockquote>
@@ -899,7 +900,7 @@ ret;
 </blockquote>
 <p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925165353.png" /></p>
 <p>根据角色来指定模型对该角色的不可见字段，如果用户有多个角色；字段可见是或关系。</p>
-<h4>对象预览</h4>
+<h4>模型预览</h4>
 <p><img src="http://lingx-gy.oss-cn-hangzhou.aliyuncs.com/QQ%E5%9B%BE%E7%89%8720150925170812.png" /></p>
 <p>在线开发的功能可直接预览，所见即所得。</p>
 <h4>写入功能树</h4>
@@ -910,8 +911,8 @@ ret;
 <h4>参数设置</h4>
 <p>系统全局参数的设置与修改。可直接刷新内存中的缓存数据，立即生效。</p>
 <p>通过LINGX或ILingxService的getContfigValue()来获取。</p>
-<h3>对象区</h3>
-<p>在集成开发环境的页面左部区域是对象列表区，简称对象区</p>
+<h3>模型区</h3>
+<p>在集成开发环境的页面左部区域是模型列表区，简称模型区</p>
 <h3>工作区</h3>
 <p>在集成开发环境的页面中部区域是工作区</p>
 <h4>添加属性</h4>
@@ -924,17 +925,17 @@ ret;
 <h4>删除</h4>
 <h3>属性区</h3>
 <p>在集成开发环境的页面右部区域是属性区</p>
-<p>对象、属性、方法、验证器、解释器、执行器等，都有自己的属性。这里是相应的属性设置区</p>
+<p>模型、属性、方法、验证器、解释器、执行器等，都有自己的属性。这里是相应的属性设置区</p>
 <h3>代码编辑区</h3>
 <p>在集成开发环境的页面底部区域是代码编辑区</p>
 <h4>编辑框</h4>
 <p>代码编辑框</p>
 <h4>API</h4>
-<p>执行器内置对象的简易说明</p>
+<p>执行器内置模型的简易说明</p>
 <h1>API</h1>
 <h2>转义表达式</h2>
 <p>使用场景
-1. 在对象的属性设置默认值，方便编辑
+1. 在模型的属性设置默认值，方便编辑
 例如：在添加用户时：有默认当前应用
 ${CUser.getApp().getId()}</p>
 <ol>
@@ -983,7 +984,7 @@ ${org_id=${CUser.getOrgId()}}</li>
 
 <h2>Java/Jsp开发的平台API</h2>
 <h3>取出Spring容器</h3>
-<p>在Java代码中不需要直接取Spring对象，直接使用@Service注解便可取得相应对象</p>
+<p>在Java代码中不需要直接取Spring模型，直接使用@Service注解便可取得相应模型</p>
 <p>在Jsp中使用以下方法</p>
 <pre><code>ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
 JdbcTemplate jdbc=applicationContext.getBean(&quot;jdbcTemplate&quot;,JdbcTemplate.class);
@@ -1014,7 +1015,7 @@ public interface ILingxService {
      */
     public int getConfigValue(String key,int defaultValue);
     /**
-     * 从Spring容器中取出对象
+     * 从Spring容器中取出模型
      * @param key
      * @return
      */
@@ -1085,17 +1086,17 @@ public static final String CLIENT_IP=&quot;ClientIP&quot;;
  */
 public static final String LOCAL_PATH=&quot;LocalPath&quot;;
 /**
- * 获取RQEUEST对象，等同HttpServletRequest
+ * 获取RQEUEST模型，等同HttpServletRequest
  * @return
  */
 public IHttpRequest getRequest();
 /**
- * 获取SESSION对象，等同HttpSession
+ * 获取SESSION模型，等同HttpSession
  * @return
  */
 public Map&lt;String,Object&gt; getSession();
 /**
- * 设置当前对象模型
+ * 设置当前模型模型
  * @param entity
  */
 public void setEntity(IEntity entity);
@@ -1105,7 +1106,7 @@ public void setEntity(IEntity entity);
  */
 public void setMethod(IMethod method);
 /**
- * 取出当前对象模型
+ * 取出当前模型模型
  * @return
  */
 public IEntity getEntity();
@@ -1132,7 +1133,7 @@ public UserBean getUserBean();
 public Object script(IScript script,IContext context) throws LingxScriptException;
 </code></pre>
 
-<h2>执行器中的内置对象API</h2>
+<h2>执行器中的内置模型API</h2>
 <h3>LINGX 核心处理类</h3>
 <pre><code>/**
  * 获取Spring环境
@@ -1152,7 +1153,7 @@ public String getConfigValue(String key,String defaultValue);
  */
 public int getConfigValue(String key,int defaultValue);
 /**
- * 从Spring容器中取出对象
+ * 从Spring容器中取出模型
  * @param key
  * @return
  */
@@ -1228,7 +1229,7 @@ public String getOrg().getName();//取当前用户行政组织名称
 <p>http://my.oschina.net/u/437232/blog/279530
 http://docs.spring.io/spring/docs/1.1.5/api/org/springframework/jdbc/core/JdbcTemplate.html</p>
 </blockquote>
-<h3>REQUEST 请求对象</h3>
+<h3>REQUEST 请求模型</h3>
 <pre><code>/**
  * 根据参数名获取请求参数值
  * @param key
@@ -1279,17 +1280,17 @@ Set&lt;String&gt; getParameterNames();
 
 <h3>CONTEXT 执行上下文</h3>
 <pre><code>/**
- * 获取RQEUEST对象，等同HttpServletRequest
+ * 获取RQEUEST模型，等同HttpServletRequest
  * @return
  */
 public IHttpRequest getRequest();
 /**
- * 获取SESSION对象，等同HttpSession
+ * 获取SESSION模型，等同HttpSession
  * @return
  */
 public Map&lt;String,Object&gt; getSession();
 /**
- * 设置当前对象模型
+ * 设置当前模型模型
  * @param entity
  */
 public void setEntity(IEntity entity);
@@ -1299,7 +1300,7 @@ public void setEntity(IEntity entity);
  */
 public void setMethod(IMethod method);
 /**
- * 取出当前对象模型
+ * 取出当前模型模型
  * @return
  */
 public IEntity getEntity();
@@ -1321,7 +1322,7 @@ public class ApiConfig {
 @Resource
 private ILingxService lingxService;
 
-@Bean(name=&quot;LINGX&quot;)//这里的LINGX就是在执行器中的内置对象名
+@Bean(name=&quot;LINGX&quot;)//这里的LINGX就是在执行器中的内置模型名
 public IScriptApi getLingxApi(){
     DefaultScriptApi lingx=new DefaultScriptApi();
     lingx.setBean(this.lingxService);
@@ -1362,17 +1363,17 @@ function getCenterWidth()
 function getCenterHeight()
 /**
  * 打开单个数据的展示窗口
- * @param ecode 对象代码
- * @param ename 对象名称
- * @param eid 对象ID
+ * @param ecode 模型代码
+ * @param ename 模型名称
+ * @param eid 模型ID
  */
 function openViewWindow(ecode,ename,eid)
 /**
- * 得到当前工作区域的TAB窗口对象
+ * 得到当前工作区域的TAB窗口模型
  */
 function getCurrentTabWindow()
 /**
- * 获得源页面的对象，通常在对话框中会调用
+ * 获得源页面的模型，通常在对话框中会调用
  * @param fromPageId
  */
 function getFromWindow(fromPageId)
