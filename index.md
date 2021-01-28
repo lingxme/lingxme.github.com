@@ -422,6 +422,14 @@ JDBC是内置的API模型，可以进入与数据库的任务交互；JDBC等于
 - REQUEST 客户端请求，封装后的Request不等同于HttpServletRequest，但同样可以var param=REQUEST.getParameter("param");
 - ENTITY_CODE 当前的实体代码
 
+### 执行结果说明
+执行结果为JSON，格式为:{code:1,message:"操作成功"}，JSON内也可以添加额外数据
+
+- code为1：提示、刷新、关窗 (一般用于操作成功)，可以直接返回'操作成功'，系统会自动封装为{code:1,message:"操作成功"}
+- code为2：提示、关窗 (一般用于树形操作成功，不刷新树)，可以用API：LINGX.ret(2,"操作成功，请继续操作!");
+- code为-1：只有提示 (一般用于操作错误提示)，可以用API：LINGX.retErr("操作失败，数据异常!");
+
+
 ###表达式执行器
 
 上面介绍了简单的执行器代码编写，以下展示稍微复杂的代码，但实际上复杂的业务逻辑代码必须写在Java类中。通过Spring提取调用
