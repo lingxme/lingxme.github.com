@@ -2,10 +2,11 @@
 <ul id="tree" class="ztree" style=""></ul>
 
 <article class='markdown-body'>
-#灵犀 - 开源的轻量级模型驱动在线开发系统
+#灵犀 - 开源的轻量级模型驱动开发框架
+ ![](http://www.lingx.com/logo.png)
 ##系统目标
- 简化信息管理软件开发；抛开编码细节、专注业务逻辑。
-
+简化信息管理软件开发；抛开编码细节、专注业务逻辑。
+##系统简介
  灵犀核心是模型驱动开发，有别于一般的代码生成系统。我们不生成代码、没有MVC、没有分层、没有前后端分离，非专业人员便可以做出一般信息管理系统。可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA。
 
 
@@ -1204,7 +1205,7 @@ is_highlight_selected_line:false,
 documment_selector:'.markdown-body', 
 ztreeStyle: { width:'260px', overflow: 'auto', position: 'fixed', 'z-index': 2147483647, border: '0px none', left: '0px', top: '0px' } 
 });
-$("title").text("灵犀 - 开源的轻量级模型驱动在线开发系统");
+$("title").text("灵犀 - 开源的轻量级模型驱动开发框架");
 $("body").css("margin","0px");
 $("body").css("margin-left","320px");
  });
